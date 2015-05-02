@@ -1,8 +1,8 @@
 # Kernel Development Scripts
 
-This is a dump of m kernel development scripts. Some are rough-and-ready and
+This is a dump of my kernel development scripts. Some are rough-and-ready and
 specific to my system, and some are more generic. Hopefully I'll get a chance to
-clean them up over time. Generally I assume the distro I'm using (arch linux.)
+clean them up over time. Generally I assume the distro I'm using (Arch Linux.)
 
 Additionally you will need to install appropriate packages, again at some point
 I will try to document the required packages.
@@ -27,7 +27,7 @@ starting point for this. His code in turn uses [xyne][xyne]'s work.
 ### Running
 
 * `runLinux` - Runs the kernel development environment with virtio networking.
-* `debugLinux` - Connects `gdb` to a running dev env. Debugging confgig options
+* `debugLinux` - Connects `gdb` to a running dev env. Debugging config options
   are enabled by `buildLinux`.
 
 ### Code
