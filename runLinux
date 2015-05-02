@@ -29,7 +29,13 @@ if [ $EUID != 0 ]; then
    exit $?
 fi
 
-username=$(whoami)
+# We want access to the underlying user.
+if [ -z "$SUDO_USER" ]; then
+    echo runLinux: please run this using sudo! >&2
+    exit 1
+fi
+
+username=$SUDO_USER
 tap_limit=10
 tap_nic=$(get_tap_name)
 br_nic="qemu-br0"
