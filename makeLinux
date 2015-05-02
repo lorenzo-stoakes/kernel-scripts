@@ -1,0 +1,116 @@
+#!/bin/bash
+set -e
+
+# Configurable variables.
+SIZE=${SIZE:-30G}
+KERNDEV_PATH=${KERNDEV_PATH:-$HOME/kerndev}
+# Set to run a chrooted shell in mounted rootfs image.
+ACCESS_CHROOT=${ACCESS_CHROOT:-}
+# Set to define a root password for the dev env, otherwise will prompt.
+ROOT_PASSWORD=${ROOT_PASSWORD:-}
+# Set to use existing rootfs image + not repopulate rootfs.
+USE_EXISTING_IMAGE=${USE_EXISTING_IMAGE:-}
+
+# Functions.
+
+# $1: Executable to search for on path.
+# $2: Error exit code.
+function checkExists() {
+    for f in $@; do
+	if ! (which $f &>/dev/null) then
+	   echo "makeLinux: Can't find required binary '$f' on path" >&2
+	   exit 1
+	fi
+    done
+}
+
+# Sanity checks.
+if [ ! -f "/etc/arch-release" ]; then
+    echo makeLinux: this script is designed for arch linux only, sorry! >&2
+    exit 1
+fi
+checkExists makeLinux.chroot.sh buildLinux installLinux pacstrap qemu-img \
+	    mkfs.ext4 arch-chroot
+
+if [ ! -z $USE_EXISTING_IMAGE ] && [ ! -f $KERNDEV_PATH/rootfs.img ]; then
+    echo "makeLinux: can't find existing rootfs image" >&2
+    exit 1
+fi
+
+CHROOT_SCRIPT_PATH=$(which makeLinux.chroot.sh)
+
+# So many commands need sudo, so just force the issue.
+if [ $EUID != 0 ]; then
+   exec sudo -E $0 $@
+   exit $?
+fi
+
+# We want access to the underlying user.
+if [ -z "$SUDO_USER" ]; then
+    echo makeLinux: please run this using sudo! >&2
+    exit 1
+fi
+
+# If this fails due to being unable to unmount /mnt, mount below will fail so we
+# can get away with ||true here.
+umount /mnt &>/dev/null || true
+mkdir -p $KERNDEV_PATH
+
+pushd $KERNDEV_PATH >/dev/null
+
+if [ -z "$USE_EXISTING_IMAGE" ]; then
+    echo Creating and formatting rootfs image file...
+    qemu-img create -q -f raw rootfs.img $SIZE
+    mkfs.ext4 -q rootfs.img
+else
+
+    echo Using existing rootfs...
+fi
+
+mount -o loop rootfs.img /mnt
+trap "umount /mnt" EXIT
+
+if [ -z "$USE_EXISTING_IMAGE" ]; then
+    echo Downloading and installing rootfs into image...
+    pacstrap /mnt base base-devel &>/dev/null
+fi
+
+echo Running chroot-ed rootfs image config script...
+cp $CHROOT_SCRIPT_PATH /mnt
+# Copy ssh keys + config.
+cp -R /home/$SUDO_USER/.ssh /mnt/
+arch-chroot /mnt /makeLinux.chroot.sh $SUDO_USER $ROOT_PASSWORD
+rm /mnt/makeLinux.chroot.sh
+# arch-chroot mounts the system's /etc/resolv.conf, so do this outside the
+# chroot.
+cat >/mnt/etc/resolv.conf <<EOF
+nameserver 8.8.8.8
+nameserver 8.8.4.4
+EOF
+echo ...chroot-ed script complete!
+if [ ! -z "$ACCESS_CHROOT" ]; then
+    echo Entering chroot shell...
+    arch-chroot /mnt
+    echo ...chroot shell done!
+fi
+
+# We don't need /mnt any more.
+umount /mnt
+trap - EXIT
+
+echo Building linux...
+# Install separately so we can update user on progress separately + not write
+# root owned files!
+NO_DONE=y DONT_INSTALL=y sudo -E -u $SUDO_USER buildLinux
+
+echo Installing modules into image and generating initrd...
+NO_DONE=y installLinux
+
+popd >/dev/null
+
+# Pass ownership back to the user.
+chown -R $SUDO_USER:$SUDO_USER $KERNDEV_PATH
+
+if [ -z "$NO_DONE" ]; then
+    echo Done!
+fi

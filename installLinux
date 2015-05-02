@@ -1,0 +1,50 @@
+#!/bin/bash
+set -e
+
+# Configurable variables.
+KERNDEV_PATH=${KERNDEV_PATH:-$HOME/kerndev}
+LINUX_DEV_PATH=${LINUX_DEV_PATH:-$HOME/linux}
+
+ROOTFS_IMAGE_PATH=$KERNDEV_PATH/rootfs.img
+INITRD_IMAGE_PATH=$KERNDEV_PATH/init.img
+KERNEL_IMAGE_PATH=$LINUX_DEV_PATH/arch/x86/boot/bzImage
+
+# Sanity checks.
+if [ ! -f $ROOTFS_IMAGE_PATH ]; then
+   echo "installLinux: can't find root fs image at $ROOTFS_IMAGE_PATH" >&2
+   exit 1
+fi
+if [ ! -f $KERNEL_IMAGE_PATH ]; then
+    echo "installLinux: can't find kernel image at $KERNEL_IMAGE_PATH" >&2
+    exit 1
+fi
+if [ ! -f $LINUX_DEV_PATH/REPORTING-BUGS ]; then
+    echo "installLinux: doesn't look like a linux dev path: $LINUX_DEV_PATH" >&2
+    exit 1
+fi
+
+# Elevate!
+if [ $EUID != 0 ]; then
+   exec sudo -E $0 $@
+   exit $?
+fi
+
+pushd $LINUX_DEV_PATH >/dev/null
+
+echo Mounting rootfs image...
+umount /mnt &>/dev/null || true
+mount -o loop $ROOTFS_IMAGE_PATH /mnt
+trap "umount /mnt" EXIT
+
+echo Installing headers and modules...
+make headers_install INSTALL_HDR_PATH=/mnt/usr/ >/dev/null
+make modules_install INSTALL_MOD_PATH=/mnt/ >/dev/null
+
+echo Installing initrd image...
+mkinitcpio -r /mnt -k $KERNEL_IMAGE_PATH -g $INITRD_IMAGE_PATH &>/dev/null
+
+popd >/dev/null
+
+if [ -z "$NO_DONE" ]; then
+    echo Done!
+fi

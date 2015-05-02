@@ -1,0 +1,5 @@
+#!/bin/bash
+set -e
+
+echo Forcing rebuild of kernel...
+REBUILD=y buildLinux

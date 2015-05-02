@@ -1,0 +1,52 @@
+#!/bin/bash
+set -e
+
+# Networking stuff adapted from
+# https://github.com/lahwaacz/archlinux-dotfiles/blob/master/Scripts/qemu-launcher.sh
+
+# Configurable variables.
+LINUX_DEV_PATH=${LINUX_DEV_PATH:-$HOME/linux}
+KERNDEV_PATH=${KERNDEV_PATH:-$HOME/kerndev}
+RAM=${RAM:-4G}
+CORES=${CORES:-4}
+# E.g. -usbdevice host:3.5
+DEVICE_SETTINGS=${DEVICE_SETTINGS:-}
+
+# Functions.
+function get_tap_name() {
+	for (( i=0; i < $tap_limit; i++ )); do
+		local name="tap$i"
+		if [[ ! -d "/sys/class/net/$name" ]]; then
+			echo "$name"
+			break
+		fi
+	done
+}
+
+# Elevate!
+if [ $EUID != 0 ]; then
+   exec sudo -E $0 $@
+   exit $?
+fi
+
+username=$(whoami)
+tap_limit=10
+tap_nic=$(get_tap_name)
+br_nic="qemu-br0"
+wan_nic="enp2s0"
+mac="de:ad:be:ef:f0:0f"
+
+kernel=$LINUX_DEV_PATH/arch/x86/boot/bzImage
+initrd=$KERNDEV_PATH/init.img
+rootfs=$KERNDEV_PATH/rootfs.img
+opts="-enable-kvm -nographic -m $RAM -cpu host -smp $CORES -s"
+netopts="-net nic,model=virtio,macaddr=$mac -net tap,ifname=$tap_nic,script=no,downscript=no"
+append="root=/dev/vda rw console=ttyS0"
+
+qemu-tap-helper.sh $username $tap_nic $br_nic $wan_nic up
+
+qemu-system-x86_64 $opts $netopts $DEVICE_SETTINGS \
+		   -drive file=$rootfs,if=virtio,cache=none -boot once=c \
+		   -initrd $initrd -kernel $kernel -append "$append" $@
+
+qemu-tap-helper.sh $username $tap_nic $br_nic $wan_nic down

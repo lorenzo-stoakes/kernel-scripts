@@ -1,0 +1,94 @@
+#!/bin/bash
+set -e
+
+# Assumes the following kernel paths/branches exist:-
+#
+# ~/linux              master
+#                      linux-stable
+#                      linux-next
+#
+# ~/linux-stable-queue master
+#
+# ~/linux-staging      master
+#                      test
+#                      staging-next
+#                      staging-testing
+#
+# ~/linux-mm           master
+
+# Functions.
+
+function enterdir() {
+    cd $1
+
+    prevbranch=$(git rev-parse --abbrev-ref HEAD)
+
+    changed=$(git status --porcelain)
+    if [ ! -z "$changed" ]; then
+	git stash -q --include-untracked
+	stashed=y
+    fi
+}
+
+function exitdir() {
+    git checkout -q $prevbranch
+
+    if [ ! -z "$stashed" ]; then
+	git stash pop -q
+	unset stashed
+    fi
+}
+
+function update() {
+    git checkout -q $1
+    git pull -q --rebase
+
+    printf "%20s\t$PWD\n" $1
+}
+
+pushd ~ >/dev/null
+
+echo Updating linux git trees...
+
+# ~~~
+
+enterdir ~/linux
+
+update master
+update linux-stable
+update linux-next
+
+exitdir
+
+# ~~~
+
+enterdir ~/linux-stable-queue
+
+update master
+
+exitdir
+
+# ~~~
+
+enterdir ~/linux-staging
+
+update master
+update test
+update staging-next
+update staging-testing
+
+exitdir
+
+# ~~~
+
+enterdir ~/linux-mm
+
+update master
+
+exitdir
+
+popd >/dev/null
+
+if [ -z "$NO_DONE" ]; then
+    echo Done!
+fi

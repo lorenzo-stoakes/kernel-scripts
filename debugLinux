@@ -1,0 +1,11 @@
+#!/bin/bash
+set -e
+
+# Configurable variables.
+LINUX_DEV_PATH=${LINUX_DEV_PATH:-$HOME/linux}
+
+pushd $LINUX_DEV_PATH >/dev/null
+
+gdb vmlinux --ex "target remote localhost:1234"
+
+popd >/dev/null

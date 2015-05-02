@@ -1,0 +1,78 @@
+#!/bin/bash
+set -e
+
+# Configurable variables.
+LINUX_DEV_PATH=${LINUX_DEV_PATH:-$HOME/linux}
+
+# Sanity checks.
+if [ ! -d $LINUX_DEV_PATH ]; then
+    echo "buildLinux: can't find linux dev path at $LINUX_DEV_PATH" >&2
+    exit 1
+fi
+if [ ! -f $LINUX_DEV_PATH/REPORTING-BUGS ]; then
+    echo "buildLinux: doesn't look like a linux dev path: $LINUX_DEV_PATH" >&2
+    exit 1
+fi
+
+# Ref: http://stackoverflow.com/a/6481016
+CORES=$(grep -c ^processor /proc/cpuinfo)
+
+pushd $LINUX_DEV_PATH >/dev/null
+
+echo Configuring kernel...
+
+if [ ! -z "$REBUILD" ] || [ ! -f .config ]; then
+    make mrproper >/dev/null
+    make defconfig >/dev/null
+fi
+
+# Required for systemd.
+scripts/config --enable fhandle
+
+# Disable unneeded wifi interface which spawns spurious debug output.
+scripts/config --disable cfg80211
+
+# tun/tap.
+scripts/config --enable tun
+
+# virtio stuff.
+scripts/config --enable virtio_pci
+scripts/config --enable virtio_mmio
+scripts/config --enable virtio_blk
+scripts/config --enable virtio_net
+scripts/config --enable virtio_console
+scripts/config --disable hw_random_virtio
+scripts/config --enable virtio_pci_legacy
+scripts/config --disable virtio_balloon
+scripts/config --enable virtio_input
+scripts/config --enable virtio_mmio_cmdline_devices
+
+# Debugging settings.
+scripts/config --enable debug_info
+scripts/config --disable debug_info_reduced
+scripts/config --enable debug_info_split
+scripts/config --enable debug_info_dwarf4
+scripts/config --enable gdb_scripts
+scripts/config --enable frame_pointer
+scripts/config --disable debug_rodata
+
+# Gain access to /proc/config.gz
+scripts/config --enable ikconfig
+scripts/config --enable ikconfig_proc
+
+make olddefconfig >/dev/null
+
+echo Compiling kernel...
+# 1 extra thread to account for I/O waiting.
+make -j$((CORES + 1)) >/dev/null
+
+if [ -z "$DONT_INSTALL" ]; then
+    echo Installing kernel...
+    NO_DONE=y installLinux
+fi
+
+popd >/dev/null
+
+if [ -z "$NO_DONE" ]; then
+    echo Done!
+fi

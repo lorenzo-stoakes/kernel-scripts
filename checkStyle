@@ -1,0 +1,6 @@
+#!/bin/bash
+set -e
+
+args=${@:-*.[ch]}
+
+source checkStyleLines --max-line-length=1000 $args
