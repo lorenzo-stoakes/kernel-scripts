@@ -6,12 +6,12 @@ LINUX_DEV_PATH=${LINUX_DEV_PATH:-$HOME/linux}
 
 # Sanity checks.
 if [ ! -d $LINUX_DEV_PATH ]; then
-    echo "buildLinux: can't find linux dev path at $LINUX_DEV_PATH" >&2
-    exit 1
+	echo "buildLinux: can't find linux dev path at $LINUX_DEV_PATH" >&2
+	exit 1
 fi
 if [ ! -f $LINUX_DEV_PATH/REPORTING-BUGS ]; then
-    echo "buildLinux: doesn't look like a linux dev path: $LINUX_DEV_PATH" >&2
-    exit 1
+	echo "buildLinux: doesn't look like a linux dev path: $LINUX_DEV_PATH" >&2
+	exit 1
 fi
 
 # Ref: http://stackoverflow.com/a/6481016
@@ -22,8 +22,8 @@ pushd $LINUX_DEV_PATH >/dev/null
 echo Configuring kernel...
 
 if [ ! -z "$REBUILD" ] || [ ! -f .config ]; then
-    make mrproper >/dev/null
-    make defconfig >/dev/null
+	make mrproper >/dev/null
+	make defconfig >/dev/null
 fi
 
 # Required for systemd.
@@ -67,12 +67,12 @@ echo Compiling kernel...
 make -j$((CORES + 1)) >/dev/null
 
 if [ -z "$DONT_INSTALL" ]; then
-    echo Installing kernel...
-    NO_DONE=y installLinux
+	echo Installing kernel...
+	NO_DONE=y installLinux
 fi
 
 popd >/dev/null
 
 if [ -z "$NO_DONE" ]; then
-    echo Done!
+	echo Done!
 fi
