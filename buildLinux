@@ -4,15 +4,17 @@ set -e
 # Configurable variables.
 LINUX_DEV_PATH=${LINUX_DEV_PATH:-$HOME/linux}
 
+# $@: message to display.
+function fatal()
+{
+	echo buildLinux: $@ >&2
+	exit 1
+}
+
 # Sanity checks.
-if [ ! -d $LINUX_DEV_PATH ]; then
-	echo "buildLinux: can't find linux dev path at $LINUX_DEV_PATH" >&2
-	exit 1
-fi
-if [ ! -f $LINUX_DEV_PATH/REPORTING-BUGS ]; then
-	echo "buildLinux: doesn't look like a linux dev path: $LINUX_DEV_PATH" >&2
-	exit 1
-fi
+[ ! -d $LINUX_DEV_PATH ] && fatal "can't find linux dev path at $LINUX_DEV_PATH"
+[ ! -f $LINUX_DEV_PATH/REPORTING-BUGS ] && \
+	fatal "Doesn't look like a linux dev path: $LINUX_DEV_PATH"
 
 # Ref: http://stackoverflow.com/a/6481016
 CORES=$(grep -c ^processor /proc/cpuinfo)
@@ -73,6 +75,4 @@ fi
 
 popd >/dev/null
 
-if [ -z "$NO_DONE" ]; then
-	echo Done!
-fi
+[ -z "$NO_DONE" ] && echo Done!
