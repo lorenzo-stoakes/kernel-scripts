@@ -15,6 +15,7 @@ function fatal()
 [ ! -d $LINUX_DEV_PATH ] && fatal "can't find linux dev path at $LINUX_DEV_PATH"
 [ ! -f $LINUX_DEV_PATH/REPORTING-BUGS ] && \
 	fatal "Doesn't look like a linux dev path: $LINUX_DEV_PATH"
+[ $EUID = 0 ] && fatal "Don't run as root, causes file ownership pain"
 
 # Ref: http://stackoverflow.com/a/6481016
 CORES=$(grep -c ^processor /proc/cpuinfo)
