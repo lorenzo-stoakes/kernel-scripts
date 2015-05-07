@@ -29,7 +29,7 @@ if [ ! -f "/etc/arch-release" ]; then
     echo makeLinux: this script is designed for arch linux only, sorry! >&2
     exit 1
 fi
-checkExists makeLinux.chroot.sh buildLinux installLinux pacstrap qemu-img \
+checkExists makeLinux.chroot.sh buildLinux installLinux pacstrap truncate \
 	    mkfs.ext4 arch-chroot
 
 if [ ! -z $USE_EXISTING_IMAGE ] && [ ! -f $KERNDEV_PATH/rootfs.img ]; then
@@ -60,7 +60,8 @@ pushd $KERNDEV_PATH >/dev/null
 
 if [ -z "$USE_EXISTING_IMAGE" ]; then
     echo Creating and formatting rootfs image file...
-    qemu-img create -q -f raw rootfs.img $SIZE
+    rm -f rootfs.img
+    truncate -s $SIZE rootfs.img
     mkfs.ext4 -q rootfs.img
 else
 
