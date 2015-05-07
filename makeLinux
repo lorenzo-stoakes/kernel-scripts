@@ -13,13 +13,18 @@ USE_EXISTING_IMAGE=${USE_EXISTING_IMAGE:-}
 
 # Functions.
 
+function fatal()
+{
+	echo makeLinux $@ >&2
+	exit 1
+}
+
 # $1: Executable to search for on path.
 # $2: Error exit code.
 function checkExists() {
     for f in $@; do
 	if ! (which $f &>/dev/null) then
-	   echo "makeLinux: Can't find required binary '$f' on path" >&2
-	   exit 1
+	   fatal "Can't find required binary '$f' on path"
 	fi
     done
 }
@@ -33,8 +38,7 @@ checkExists makeLinux.chroot.sh buildLinux installLinux pacstrap truncate \
 	    mkfs.ext4 arch-chroot
 
 if [ ! -z $USE_EXISTING_IMAGE ] && [ ! -f $KERNDEV_PATH/rootfs.img ]; then
-    echo "makeLinux: can't find existing rootfs image" >&2
-    exit 1
+    fatal "can't find existing rootfs image"
 fi
 
 CHROOT_SCRIPT_PATH=$(which makeLinux.chroot.sh)
@@ -47,8 +51,7 @@ fi
 
 # We want access to the underlying user.
 if [ -z "$SUDO_USER" ]; then
-    echo makeLinux: please run this using sudo! >&2
-    exit 1
+    fatal please run this using sudo!
 fi
 
 # If this fails due to being unable to unmount /mnt, mount below will fail so we
