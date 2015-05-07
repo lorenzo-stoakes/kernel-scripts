@@ -18,7 +18,7 @@ function fatal()
 [ $EUID = 0 ] && fatal "Don't run as root, causes file ownership pain"
 
 # Ref: http://stackoverflow.com/a/6481016
-CORES=$(grep -c ^processor /proc/cpuinfo)
+cores=$(grep -c ^processor /proc/cpuinfo)
 
 pushd $LINUX_DEV_PATH >/dev/null
 
@@ -67,7 +67,7 @@ make olddefconfig >/dev/null
 
 echo Compiling kernel...
 # 1 extra thread to account for I/O waiting.
-make -j$((CORES + 1)) >/dev/null
+make -j$((cores + 1)) >/dev/null
 
 if [ -z "$DONT_INSTALL" ]; then
 	echo Installing kernel...
