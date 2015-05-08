@@ -15,6 +15,9 @@ starting point for this. His code in turn uses [xyne][xyne]'s work.
 
 ## Scripts
 
+__NOTE:__ Many of these scripts are interdependent and assume they are all
+available on the `PATH`.
+
 ### Generating
 
 * `makeLinux` - Creates a [qemu][qemu] kernel development environment. The image
