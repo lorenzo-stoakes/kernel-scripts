@@ -17,9 +17,10 @@ starting point for this. His code in turn uses [xyne][xyne]'s work.
 
 ### Generating
 
-* `makeLinux` - Creates a [qemu][qemu] kernel development environment.
+* `makeLinux` - Creates a [qemu][qemu] kernel development environment. The image
+  is an Arch Linux system.
 * `buildLinux` - Configures and builds the kernel, placing header and module
-  files into the dev env image. The image is an Arch Linux system.
+  files into the dev env image.
 * `rebuildLinux` - Same as `buildLinux` but runs `make mrproper` first.
 * `installLinux` - Installs header and module files into the dev env image. This
   is invoked by `buildLinux` unless explicitly disabled.
