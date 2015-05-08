@@ -21,6 +21,7 @@ starting point for this. His code in turn uses [xyne][xyne]'s work.
   is an Arch Linux system.
 * `buildLinux` - Configures and builds the kernel, placing header and module
   files into the dev env image.
+* `configLinux` - Sets kernel configuration options for the development environment.
 * `rebuildLinux` - Same as `buildLinux` but runs `make mrproper` first.
 * `installLinux` - Installs header and module files into the dev env image. This
   is invoked by `buildLinux` unless explicitly disabled.
