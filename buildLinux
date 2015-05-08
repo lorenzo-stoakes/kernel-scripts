@@ -29,41 +29,9 @@ if [ ! -z "$REBUILD" ] || [ ! -f .config ]; then
 	make defconfig >/dev/null
 fi
 
-# Required for systemd.
-scripts/config --enable fhandle
-
-# Disable unneeded wifi interface which spawns spurious debug output.
-scripts/config --disable cfg80211
-
-# tun/tap.
-scripts/config --enable tun
-
-# virtio stuff.
-scripts/config --enable virtio_pci
-scripts/config --enable virtio_mmio
-scripts/config --enable virtio_blk
-scripts/config --enable virtio_net
-scripts/config --enable virtio_console
-scripts/config --disable hw_random_virtio
-scripts/config --enable virtio_pci_legacy
-scripts/config --disable virtio_balloon
-scripts/config --enable virtio_input
-scripts/config --enable virtio_mmio_cmdline_devices
-
-# Debugging settings.
-scripts/config --enable debug_info
-scripts/config --disable debug_info_reduced
-scripts/config --enable debug_info_split
-scripts/config --enable debug_info_dwarf4
-scripts/config --enable gdb_scripts
-scripts/config --enable frame_pointer
-scripts/config --disable debug_rodata
-
-# Gain access to /proc/config.gz
-scripts/config --enable ikconfig
-scripts/config --enable ikconfig_proc
-
-make olddefconfig >/dev/null
+configLinux
+# Set any new options implied by configLinux to default.
+mak olddefconfig
 
 echo Compiling kernel...
 # 1 extra thread to account for I/O waiting.
