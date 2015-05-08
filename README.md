@@ -22,8 +22,9 @@ available on the `PATH`.
 
 * `makeLinux` - Creates a [qemu][qemu] kernel development environment. The image
   is an Arch Linux system.
-* `buildLinux` - Configures and builds the kernel, placing header and module
-  files into the dev env image.
+* `buildLinux` - Configures and builds the kernel, optionally placing header and
+  module files into the dev env image. It accepts a single optional argument
+  which, if provided, specifies a cross-compile target architecture.
 * `configLinux` - Sets kernel configuration options for the development environment.
 * `rebuildLinux` - Same as `buildLinux` but runs `make mrproper` first.
 * `installLinux` - Installs header and module files into the dev env image. This

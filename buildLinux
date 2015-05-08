@@ -3,6 +3,11 @@ set -e
 
 # Configurable variables.
 LINUX_DEV_PATH=${LINUX_DEV_PATH:-$HOME/linux}
+VERBOSE=${VERBOSE:-}
+
+# If argument provided to buildLinux it specifies a cross-compile target
+# architecture.
+target_arch=$1
 
 # $@: message to display.
 function fatal()
@@ -11,11 +16,34 @@ function fatal()
 	exit 1
 }
 
+# $@: arguments to make.
+function mak()
+{
+	if [ -z $VERBOSE ]; then
+	    make $make_opts $@ >/dev/null
+	else
+	    make $make_opts $@
+	fi
+}
+
 # Sanity checks.
 [ ! -d $LINUX_DEV_PATH ] && fatal "can't find linux dev path at $LINUX_DEV_PATH"
 [ ! -f $LINUX_DEV_PATH/REPORTING-BUGS ] && \
 	fatal "Doesn't look like a linux dev path: $LINUX_DEV_PATH"
 [ $EUID = 0 ] && fatal "Don't run as root, causes file ownership pain"
+
+case $target_arch in
+aarch64)
+	make_opts="ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu-"
+	# Currently this implies no install.
+	DONT_INSTALL=y
+	;;
+"")
+	;;
+*)
+	fatal "unknown architecture: $target_arch"
+	;;
+esac
 
 # Ref: http://stackoverflow.com/a/6481016
 cores=$(grep -c ^processor /proc/cpuinfo)
@@ -25,8 +53,8 @@ pushd $LINUX_DEV_PATH >/dev/null
 echo Configuring kernel...
 
 if [ ! -z "$REBUILD" ] || [ ! -f .config ]; then
-	make mrproper >/dev/null
-	make defconfig >/dev/null
+	mak mrproper
+	mak defconfig
 fi
 
 configLinux
@@ -35,7 +63,7 @@ mak olddefconfig
 
 echo Compiling kernel...
 # 1 extra thread to account for I/O waiting.
-make -j$((cores + 1)) >/dev/null
+mak -j$((cores + 1))
 
 if [ -z "$DONT_INSTALL" ]; then
 	echo Installing kernel...
