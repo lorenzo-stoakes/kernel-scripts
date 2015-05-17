@@ -15,9 +15,9 @@ target_arch=$1
 function mak()
 {
 	if [ -z $VERBOSE ]; then
-	    make $make_opts $@ >/dev/null
+		make $make_opts $@ >/dev/null
 	else
-	    make $make_opts $@
+		make $make_opts $@
 	fi
 }
 

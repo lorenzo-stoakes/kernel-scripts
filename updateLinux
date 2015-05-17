@@ -4,31 +4,31 @@ set -e; set -o pipefail
 # Functions.
 
 function enterdir() {
-    cd $1
+	cd $1
 
-    prevbranch=$(git rev-parse --abbrev-ref HEAD)
+	prevbranch=$(git rev-parse --abbrev-ref HEAD)
 
-    changed=$(git status --porcelain)
-    if [ ! -z "$changed" ]; then
-	git stash -q --include-untracked
-	stashed=y
-    fi
+	changed=$(git status --porcelain)
+	if [ ! -z "$changed" ]; then
+		git stash -q --include-untracked
+		stashed=y
+	fi
 }
 
 function exitdir() {
-    git checkout -q $prevbranch
+	git checkout -q $prevbranch
 
-    if [ ! -z "$stashed" ]; then
-	git stash pop -q
-	unset stashed
-    fi
+	if [ ! -z "$stashed" ]; then
+		git stash pop -q
+		unset stashed
+	fi
 }
 
 function update() {
-    git checkout -q $1
-    git pull -q --rebase
+	git checkout -q $1
+	git pull -q --rebase
 
-    printf "%20s\t$PWD\n" $1
+	printf "%20s\t$PWD\n" $1
 }
 
 pushd ~ >/dev/null

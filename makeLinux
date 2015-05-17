@@ -47,16 +47,15 @@ if [ -z "$USE_EXISTING_IMAGE" ]; then
     truncate -s $SIZE rootfs.img
     mkfs.ext4 -q rootfs.img
 else
-
-    echo Using existing rootfs...
+	echo Using existing rootfs...
 fi
 
 mount -o loop rootfs.img /mnt
 trap "umount /mnt" EXIT
 
 if [ -z "$USE_EXISTING_IMAGE" ]; then
-    echo Downloading and installing rootfs into image...
-    pacstrap /mnt base base-devel &>/dev/null
+	echo Downloading and installing rootfs into image...
+	pacstrap /mnt base base-devel &>/dev/null
 fi
 
 echo Running chroot-ed rootfs image config script...
@@ -73,9 +72,9 @@ nameserver 8.8.4.4
 EOF
 echo ...chroot-ed script complete!
 if [ ! -z "$ACCESS_CHROOT" ]; then
-    echo Entering chroot shell...
-    arch-chroot /mnt
-    echo ...chroot shell done!
+	echo Entering chroot shell...
+	arch-chroot /mnt
+	echo ...chroot shell done!
 fi
 
 # We don't need /mnt any more.

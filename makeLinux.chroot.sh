@@ -15,22 +15,22 @@ password=$2 # Optional, if not provided script will prompt.
 # Taken from http://unix.stackexchange.com/a/14346. Non-root version didn't work.
 function inside_chroot()
 {
-    [ "$(stat -c %d:%i /)" != "$(stat -c %d:%i /proc/1/root/.)" ]
+	[ "$(stat -c %d:%i /)" != "$(stat -c %d:%i /proc/1/root/.)" ]
 }
 
 function usage()
 {
-    echo "usage: $0 [username] <root password>" >&2
+	echo "usage: $0 [username] <root password>" >&2
 }
 
 # Sanity checks.
 if ! inside_chroot; then
-    echo not inside chroot! >&2
-    exit 1
+	echo not inside chroot! >&2
+	exit 1
 fi
 if [ -z "$username" ]; then
-    usage
-    exit 1
+	usage
+	exit 1
 fi
 
 echo Configuring system...
@@ -61,12 +61,12 @@ pacman -R --noconfirm linux &>/dev/null || true
 
 echo Setting up root password...
 if [ -z "$password" ]; then
-    # Don't let a typo ruin our day!
-    while ! passwd; do
+	# Don't let a typo ruin our day!
+	while ! passwd; do
 	echo Try again!
-    done
+	done
 else
-    echo root:$password | chpasswd
+	echo root:$password | chpasswd
 fi
 
 echo Setting up user $username with auto-login...
