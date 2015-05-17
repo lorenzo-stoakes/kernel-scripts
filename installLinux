@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -e; set -o pipefail
 
 # Configurable variables.
 KERNDEV_PATH=${KERNDEV_PATH:-$HOME/kerndev}

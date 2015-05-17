@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -e; set -o pipefail
 
 # Configurable variables.
 SIZE=${SIZE:-30G}

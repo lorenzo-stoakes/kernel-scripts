@@ -1,5 +1,4 @@
 #!/bin/bash
-set -e
 
 # Assumes the following kernel paths/branches exist:-
 #
@@ -15,6 +14,7 @@ set -e
 #                      staging-testing
 #
 # ~/linux-mm           master
+set -e; set -o pipefail
 
 # Functions.
 

@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -e; set -o pipefail
 
 # Configurable variables.
 # Console dimensions, adjust to taste, this works well on my screen!

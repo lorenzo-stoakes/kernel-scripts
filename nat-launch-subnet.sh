@@ -1,5 +1,5 @@
 #!/bin/bash
-
+set -e; set -o pipefail
 
 function print_launch_subnet_usage()
 {

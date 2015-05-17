@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -e; set -o pipefail
 
 # Networking stuff adapted from
 # https://github.com/lahwaacz/archlinux-dotfiles/blob/master/Scripts/qemu-launcher.sh

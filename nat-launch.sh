@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e; set -o pipefail
 
 # Original author: Xyne
 # http://xyne.archlinux.ca/notes/network/dhcp_with_dns.html
