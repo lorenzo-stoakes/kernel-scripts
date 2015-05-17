@@ -7,4 +7,5 @@ LINUX_DEV_PATH=${LINUX_DEV_PATH:-$HOME/linux}
 # Default to all .c and .h files in the directory.
 args=${@:-*.[ch]}
 
-$LINUX_DEV_PATH/scripts/checkpatch.pl -f -q --show-types --no-summary $args | grep -v "Does not appear to be a unified-diff format patch" || true
+$LINUX_DEV_PATH/scripts/checkpatch.pl -f -q --show-types --no-summary $args | \
+	grep -v "Does not appear to be a unified-diff format patch" || true
