@@ -13,6 +13,21 @@ ROOT_PASSWORD=${ROOT_PASSWORD:-}
 # Set to use existing rootfs image + not repopulate rootfs.
 USE_EXISTING_IMAGE=${USE_EXISTING_IMAGE:-}
 
+case $1 in
+	"aarch64")
+		shift
+		exec makeLinux_aarch64 $@
+		exit $?
+		;;
+	"x86_64")
+		;;
+	# If no arguments, assume x86_64.
+	"")
+		;;
+	 *)
+		 fatal Unknown arch $1.
+	 ;;
+esac
 
 # Sanity checks.
 [ ! -f "/etc/arch-release" ] && \
@@ -21,11 +36,10 @@ USE_EXISTING_IMAGE=${USE_EXISTING_IMAGE:-}
 checkExists makeLinux.chroot.sh buildLinux installLinux pacstrap truncate \
 	    mkfs.ext4 arch-chroot
 
-if [ ! -z $USE_EXISTING_IMAGE ] && [ ! -f $KERNDEV_PATH/rootfs.img ]; then
-    fatal "can't find existing rootfs image"
-fi
+[ ! -z $USE_EXISTING_IMAGE ] && [ ! -f $KERNDEV_PATH/rootfs.img ] && \
+	fatal "can't find existing rootfs image"
 
-CHROOT_SCRIPT_PATH=$(which makeLinux.chroot.sh)
+chroot_script_path=$(which makeLinux.chroot.sh)
 
 # So many commands need sudo, so just force the issue.
 elevate $@
@@ -42,10 +56,10 @@ mkdir -p $KERNDEV_PATH
 push_kerndev
 
 if [ -z "$USE_EXISTING_IMAGE" ]; then
-    echo Creating and formatting rootfs image file...
-    rm -f rootfs.img
-    truncate -s $SIZE rootfs.img
-    mkfs.ext4 -q rootfs.img
+	echo Creating and formatting rootfs image file...
+	rm -f rootfs.img
+	truncate -s $SIZE rootfs.img
+	mkfs.ext4 -q rootfs.img
 else
 	echo Using existing rootfs...
 fi
@@ -59,11 +73,11 @@ if [ -z "$USE_EXISTING_IMAGE" ]; then
 fi
 
 echo Running chroot-ed rootfs image config script...
-cp $CHROOT_SCRIPT_PATH /mnt
+cp $chroot_script_path /mnt/chroot.sh
 # Copy ssh keys + config.
 cp -R /home/$SUDO_USER/.ssh /mnt/
-arch-chroot /mnt /makeLinux.chroot.sh $SUDO_USER $ROOT_PASSWORD
-rm /mnt/makeLinux.chroot.sh
+arch-chroot /mnt /chroot.sh $SUDO_USER $ROOT_PASSWORD
+rm /mnt/chroot.sh
 # arch-chroot mounts the system's /etc/resolv.conf, so do this outside the
 # chroot.
 cat >/mnt/etc/resolv.conf <<EOF
@@ -82,8 +96,8 @@ unmount
 trap - EXIT
 
 echo Building linux...
-# Install separately so we can update user on progress separately + not write
-# root owned files!
+# Install separately so we can update user on progress separately, also this
+# means we can run as the user and thus not write root owned files!
 NO_DONE=y DONT_INSTALL=y sudo -E -u $SUDO_USER buildLinux
 
 echo Installing modules into image and generating initrd...

@@ -74,6 +74,4 @@ exitdir
 
 popd >/dev/null
 
-if [ -z "$NO_DONE" ]; then
-    echo Done!
-fi
+[ -z "$NO_DONE" ] && echo Done! || true
