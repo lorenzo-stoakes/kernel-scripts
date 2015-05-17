@@ -1,19 +1,4 @@
 #!/bin/bash
-
-# Assumes the following kernel paths/branches exist:-
-#
-# ~/linux              master
-#                      linux-stable
-#                      linux-next
-#
-# ~/linux-stable-queue master
-#
-# ~/linux-staging      master
-#                      test
-#                      staging-next
-#                      staging-testing
-#
-# ~/linux-mm           master
 set -e; set -o pipefail
 
 # Functions.
