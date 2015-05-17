@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e; set -o pipefail
 
+source shared_kernel_functions.sh
+
 # Configurable variables.
 LINUX_DEV_PATH=${LINUX_DEV_PATH:-$HOME/linux}
 VERBOSE=${VERBOSE:-}
@@ -8,13 +10,6 @@ VERBOSE=${VERBOSE:-}
 # If argument provided to buildLinux it specifies a cross-compile target
 # architecture.
 target_arch=$1
-
-# $@: message to display.
-function fatal()
-{
-	echo buildLinux: $@ >&2
-	exit 1
-}
 
 # $@: arguments to make.
 function mak()
@@ -48,7 +43,7 @@ esac
 # Ref: http://stackoverflow.com/a/6481016
 cores=$(grep -c ^processor /proc/cpuinfo)
 
-pushd $LINUX_DEV_PATH >/dev/null
+push_linux
 
 echo Configuring kernel...
 
@@ -70,6 +65,6 @@ if [ -z "$DONT_INSTALL" ]; then
 	NO_DONE=y installLinux
 fi
 
-popd >/dev/null
+pop
 
 [ -z "$NO_DONE" ] && echo Done!

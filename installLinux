@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e; set -o pipefail
 
+source shared_kernel_functions.sh
+
 # Configurable variables.
 KERNDEV_PATH=${KERNDEV_PATH:-$HOME/kerndev}
 LINUX_DEV_PATH=${LINUX_DEV_PATH:-$HOME/linux}
@@ -23,13 +25,10 @@ if [ ! -f $LINUX_DEV_PATH/REPORTING-BUGS ]; then
     exit 1
 fi
 
-# Elevate!
-if [ $EUID != 0 ]; then
-   exec sudo -E $0 $@
-   exit $?
-fi
 
-pushd $LINUX_DEV_PATH >/dev/null
+elevate $@
+
+push_linux
 
 echo Mounting rootfs image...
 umount /mnt &>/dev/null || true
@@ -43,7 +42,7 @@ make modules_install INSTALL_MOD_PATH=/mnt/ >/dev/null
 echo Installing initrd image...
 mkinitcpio -r /mnt -k $KERNEL_IMAGE_PATH -g $INITRD_IMAGE_PATH &>/dev/null
 
-popd >/dev/null
+pop
 
 if [ -z "$NO_DONE" ]; then
     echo Done!

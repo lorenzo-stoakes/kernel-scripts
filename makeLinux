@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e; set -o pipefail
 
+source shared_kernel_functions.sh
+
 # Configurable variables.
 SIZE=${SIZE:-30G}
 KERNDEV_PATH=${KERNDEV_PATH:-$HOME/kerndev}
@@ -11,29 +13,11 @@ ROOT_PASSWORD=${ROOT_PASSWORD:-}
 # Set to use existing rootfs image + not repopulate rootfs.
 USE_EXISTING_IMAGE=${USE_EXISTING_IMAGE:-}
 
-# Functions.
-
-function fatal()
-{
-	echo makeLinux $@ >&2
-	exit 1
-}
-
-# $1: Executable to search for on path.
-# $2: Error exit code.
-function checkExists() {
-    for f in $@; do
-	if ! (which $f &>/dev/null) then
-	   fatal "Can't find required binary '$f' on path"
-	fi
-    done
-}
 
 # Sanity checks.
-if [ ! -f "/etc/arch-release" ]; then
-    echo makeLinux: this script is designed for arch linux only, sorry! >&2
-    exit 1
-fi
+[ ! -f "/etc/arch-release" ] && \
+	fatal This script is designed for arch linux only, sorry!
+
 checkExists makeLinux.chroot.sh buildLinux installLinux pacstrap truncate \
 	    mkfs.ext4 arch-chroot
 
@@ -44,22 +28,18 @@ fi
 CHROOT_SCRIPT_PATH=$(which makeLinux.chroot.sh)
 
 # So many commands need sudo, so just force the issue.
-if [ $EUID != 0 ]; then
-   exec sudo -E $0 $@
-   exit $?
-fi
+elevate $@
 
 # We want access to the underlying user.
-if [ -z "$SUDO_USER" ]; then
-    fatal please run this using sudo!
-fi
+[ -z "$SUDO_USER" ] && fatal please run this using sudo!
 
 # If this fails due to being unable to unmount /mnt, mount below will fail so we
 # can get away with ||true here.
-umount /mnt &>/dev/null || true
+unmount
+
 mkdir -p $KERNDEV_PATH
 
-pushd $KERNDEV_PATH >/dev/null
+push_kerndev
 
 if [ -z "$USE_EXISTING_IMAGE" ]; then
     echo Creating and formatting rootfs image file...
@@ -99,7 +79,7 @@ if [ ! -z "$ACCESS_CHROOT" ]; then
 fi
 
 # We don't need /mnt any more.
-umount /mnt
+unmount
 trap - EXIT
 
 echo Building linux...
@@ -110,10 +90,10 @@ NO_DONE=y DONT_INSTALL=y sudo -E -u $SUDO_USER buildLinux
 echo Installing modules into image and generating initrd...
 NO_DONE=y installLinux
 
-popd >/dev/null
+pop
 
 # Pass ownership back to the user.
-chown -R $SUDO_USER:$SUDO_USER $KERNDEV_PATH
+give_back $KERNDEV_PATH
 
 if [ -z "$NO_DONE" ]; then
     echo Done!

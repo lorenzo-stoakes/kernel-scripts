@@ -3,10 +3,13 @@ set -e; set -o pipefail
 
 # Configures kernel options for kernel dev env.
 
+source shared_kernel_functions.sh
+
 # Configurable variables.
 LINUX_DEV_PATH=${LINUX_DEV_PATH:-$HOME/linux}
 
-pushd $LINUX_DEV_PATH >/dev/null
+push_linux
+
 
 # Required for systemd.
 scripts/config --enable fhandle
@@ -42,4 +45,4 @@ scripts/config --disable debug_rodata
 scripts/config --enable ikconfig
 scripts/config --enable ikconfig_proc
 
-popd >/dev/null
+pop

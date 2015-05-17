@@ -1,7 +1,9 @@
 #!/bin/bash
 set -e; set -o pipefail
 
-# Networking stuff adapted from
+source shared_kernel_functions.sh
+
+# Networking scripts adapted from
 # https://github.com/lahwaacz/archlinux-dotfiles/blob/master/Scripts/qemu-launcher.sh
 
 # Configurable variables.
@@ -23,18 +25,6 @@ function get_tap_name() {
 	done
 }
 
-# Elevate!
-if [ $EUID != 0 ]; then
-   exec sudo -E $0 $@
-   exit $?
-fi
-
-# We want access to the underlying user.
-if [ -z "$SUDO_USER" ]; then
-    echo runLinux: please run this using sudo! >&2
-    exit 1
-fi
-
 username=$SUDO_USER
 tap_limit=10
 tap_nic=$(get_tap_name)
@@ -48,6 +38,10 @@ rootfs=$KERNDEV_PATH/rootfs.img
 opts="-enable-kvm -nographic -m $RAM -cpu host -smp $CORES -s"
 netopts="-net nic,model=virtio,macaddr=$mac -net tap,ifname=$tap_nic,script=no,downscript=no"
 append="root=/dev/vda rw console=ttyS0"
+elevate $@
+
+# We want access to the underlying user.
+[ -z "$SUDO_USER" ] && fatal Please run this using sudo!
 
 qemu-tap-helper.sh $username $tap_nic $br_nic $wan_nic up
 
