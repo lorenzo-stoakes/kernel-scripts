@@ -26,11 +26,13 @@ function mak()
 	fatal "Doesn't look like a linux dev path: $LINUX_DEV_PATH"
 [ $EUID = 0 ] && fatal "Don't run as root, causes file ownership pain"
 
+target_arch=${target_arch:-"x86_64"}
+
 case $target_arch in
 aarch64)
 	make_opts="ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu-"
 	;;
-"")
+"x86_64")
 	;;
 *)
 	fatal "unknown architecture: $target_arch"
