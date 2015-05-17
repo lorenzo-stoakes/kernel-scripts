@@ -30,6 +30,9 @@ target_arch=${target_arch:-"x86_64"}
 
 case $target_arch in
 aarch64)
+	# Make sure we have cross-compilers. `gcc` check should suffice.
+	checkExists aarch64-linux-gnu-gcc
+
 	make_opts="ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu-"
 	;;
 "x86_64")
