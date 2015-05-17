@@ -14,7 +14,11 @@ CORES=${CORES:-4}
 # E.g. -usbdevice host:3.5
 DEVICE_SETTINGS=${DEVICE_SETTINGS:-}
 
+# If argument provided it specifies a cross-compile target architecture.
+target_arch=$1
+
 # Functions.
+
 function get_tap_name() {
 	for (( i=0; i < $tap_limit; i++ )); do
 		local name="tap$i"
@@ -25,28 +29,65 @@ function get_tap_name() {
 	done
 }
 
-username=$SUDO_USER
 tap_limit=10
 tap_nic=$(get_tap_name)
 br_nic="qemu-br0"
 wan_nic="enp2s0"
 mac="de:ad:be:ef:f0:0f"
 
-kernel=$LINUX_DEV_PATH/arch/x86/boot/bzImage
-initrd=$KERNDEV_PATH/init.img
-rootfs=$KERNDEV_PATH/rootfs.img
-opts="-enable-kvm -nographic -m $RAM -cpu host -smp $CORES -s"
-netopts="-net nic,model=virtio,macaddr=$mac -net tap,ifname=$tap_nic,script=no,downscript=no"
-append="root=/dev/vda rw console=ttyS0"
 elevate $@
 
 # We want access to the underlying user.
 [ -z "$SUDO_USER" ] && fatal Please run this using sudo!
 
-qemu-tap-helper.sh $username $tap_nic $br_nic $wan_nic up
+# TODO: Networking not yet working for aarch64.
+net_opts="-net nic,model=virtio,macaddr=$mac
+	 -net tap,ifname=$tap_nic,script=no,downscript=no"
 
-qemu-system-x86_64 $opts $netopts $DEVICE_SETTINGS \
-		   -drive file=$rootfs,if=virtio,cache=none -boot once=c \
-		   -initrd $initrd -kernel $kernel -append "$append" $@
+case $target_arch in
+aarch64)
+	qemu=qemu-system-aarch64
 
-qemu-tap-helper.sh $username $tap_nic $br_nic $wan_nic down
+	kernel=$LINUX_DEV_PATH/arch/arm64/boot/Image
+	initrd=$KERNDEV_PATH/init_aarch64.img
+	rootfs=$KERNDEV_PATH/rootfs_aarch64.img
+
+	arch_opts="-machine virt
+	-cpu cortex-a57
+	-machine type=virt,kernel_irqchip=on
+	-drive if=none,file=$rootfs,id=vda
+	-device virtio-blk-device,drive=vda"
+
+	arch_append="console=ttyAMA0"
+	;;
+"")
+	qemu=qemu-system-x86_64
+
+	kernel=$LINUX_DEV_PATH/arch/x86/boot/bzImage
+	initrd=$KERNDEV_PATH/init.img
+	rootfs=$KERNDEV_PATH/rootfs.img
+
+	arch_opts="-enable-kvm
+	-cpu host
+	-drive file=$rootfs,if=virtio,cache=none
+	-boot once=c
+	-initrd $initrd"
+	arch_append="console=ttyS0"
+
+	;;
+*)
+	fatal "unknown architecture: $target_arch"
+	;;
+esac
+
+shared_opts="-nographic -m $RAM -s -smp $CORES"
+shared_append="rw root=/dev/vda"
+
+qemu-tap-helper.sh $SUDO_USER $tap_nic $br_nic $wan_nic up
+trap "qemu-tap-helper.sh $SUDO_USER $tap_nic $br_nic $wan_nic down" EXIT
+
+# We want access to the underlying user.
+[ -z "$SUDO_USER" ] && fatal please run this using sudo!
+
+$qemu $shared_opts $arch_opts $net_opts $DEVICE_SETTINGS \
+	-kernel $kernel -append "$shared_append $arch_append"
