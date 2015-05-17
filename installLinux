@@ -11,6 +11,14 @@ ROOTFS_IMAGE_PATH=$KERNDEV_PATH/rootfs.img
 INITRD_IMAGE_PATH=$KERNDEV_PATH/init.img
 KERNEL_IMAGE_PATH=$LINUX_DEV_PATH/arch/x86/boot/bzImage
 
+# Functions.
+
+function mak()
+{
+	make $make_opts $@
+}
+
+
 # Sanity checks.
 if [ ! -f $ROOTFS_IMAGE_PATH ]; then
    echo "installLinux: can't find root fs image at $ROOTFS_IMAGE_PATH" >&2
@@ -36,8 +44,8 @@ mount -o loop $ROOTFS_IMAGE_PATH /mnt
 trap "umount /mnt" EXIT
 
 echo Installing headers and modules...
-make headers_install INSTALL_HDR_PATH=/mnt/usr/ >/dev/null
-make modules_install INSTALL_MOD_PATH=/mnt/ >/dev/null
+mak headers_install INSTALL_HDR_PATH=/mnt/usr/ >/dev/null
+mak modules_install INSTALL_MOD_PATH=/mnt/ >/dev/null
 
 echo Installing initrd image...
 mkinitcpio -r /mnt -k $KERNEL_IMAGE_PATH -g $INITRD_IMAGE_PATH &>/dev/null
