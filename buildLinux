@@ -7,8 +7,7 @@ source shared_kernel_functions.sh
 LINUX_DEV_PATH=${LINUX_DEV_PATH:-$HOME/linux}
 VERBOSE=${VERBOSE:-}
 
-# If argument provided to buildLinux it specifies a cross-compile target
-# architecture.
+# If argument provided it specifies a cross-compile target architecture.
 target_arch=$1
 
 # $@: arguments to make.

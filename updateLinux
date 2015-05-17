@@ -72,6 +72,16 @@ update master
 
 exitdir
 
+# ~~~
+
+enterdir ~/linux-aarch64
+
+update master
+update devel
+update fixes/core
+
+exitdir
+
 popd >/dev/null
 
 [ -z "$NO_DONE" ] && echo Done! || true
