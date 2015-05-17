@@ -52,6 +52,4 @@ mkinitcpio -r /mnt -k $KERNEL_IMAGE_PATH -g $INITRD_IMAGE_PATH &>/dev/null
 
 pop
 
-if [ -z "$NO_DONE" ]; then
-    echo Done!
-fi
+[ -z "$NO_DONE" ] && echo Done! || true
