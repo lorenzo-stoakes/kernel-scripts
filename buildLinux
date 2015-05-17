@@ -67,4 +67,4 @@ fi
 
 pop
 
-[ -z "$NO_DONE" ] && echo Done!
+[ -z "$NO_DONE" ] && echo Done! || true
