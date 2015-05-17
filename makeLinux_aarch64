@@ -1,0 +1,120 @@
+#!/bin/bash
+set -e; set -o pipefail
+
+source shared_kernel_functions.sh
+
+# TODO: Duplicates makeLinux, lots of copy-pasta, de-duplicate!!
+
+default_packages="netbase,ifupdown,net-tools,dhcpcd5,iproute,wget,sudo,zsh,curl,\
+ca-certificates,man-db,git,pciutils,usbutils,iputils-ping,less,nano,kmod"
+
+# Configurable variables.
+SIZE=${SIZE:-30G}
+KERNDEV_PATH=${KERNDEV_PATH:-$HOME/kerndev}
+DEBIAN_MIRROR=${DEBIAN_MIRROR:-http://mirror.positive-internet.com/debian}
+DEBIAN_VERSION=${DEBIAN_VERSION:-jessie}
+PACKAGES=${PACKAGES:-$default_packages}
+# Set to use existing rootfs image + not repopulate rootfs.
+USE_EXISTING_IMAGE=${USE_EXISTING_IMAGE:-}
+ACCESS_CHROOT=${ACCESS_CHROOT:-}
+
+binfmt_path=/proc/sys/fs/binfmt_misc
+
+binfmt_aarch64=":aarch64:M::\x7fELF\x02\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\
+\x00\x02\x00\xb7:\xff\xff\xff\xff\xff\xff\xff\x00\xff\xff\xff\xff\xff\xff\xff\
+\xff\xfe\xff\xff:/usr/bin/qemu-aarch64-static:"
+
+rootfs=rootfs_aarch64.img
+
+chroot_path="/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin"
+
+# Functions.
+
+function cleanup() {
+	[ -f $binfmt_path/aarch64 ] && echo -1 > $binfmt_path/aarch64
+	rm -f /mnt/usr/bin/qemu-aarch64-static
+	umount /mnt &>/dev/null || true
+}
+
+# Sanity checks.
+checkExists debootstrap qemu-system-aarch64 qemu-aarch64-static
+[ ! -d $binfmt_path ] && fatal "binfmt not available."
+
+[ ! -z $USE_EXISTING_IMAGE ] && [ ! -f $KERNDEV_PATH/$rootfs ] && \
+	fatal "can't find existing rootfs image"
+
+# So many commands need sudo, so just force the issue.
+elevate $@
+
+chroot_script_path=$(which makeLinux_aarch64.chroot.sh)
+
+unmount
+
+mkdir -p $KERNDEV_PATH
+
+push_kerndev
+
+if [ -z "$USE_EXISTING_IMAGE" ]; then
+	echo Creating and formatting rootfs image file...
+	rm -f $rootfs
+	truncate -s $SIZE $rootfs
+	mkfs.ext4 -q $rootfs
+fi
+
+mount -o loop $rootfs /mnt
+trap cleanup EXIT
+
+if [ -z "$USE_EXISTING_IMAGE" ]; then
+	echo "Downloading and installing first stage rootfs into image..."
+	debootstrap --arch=arm64 --variant=minbase --foreign --include=$PACKAGES \
+		$DEBIAN_VERSION /mnt $DEBIAN_MIRROR >/dev/null
+fi
+
+echo Enabling binfmt for chroot...
+cp $(which qemu-aarch64-static) /mnt/usr/bin/
+echo $binfmt_aarch64 > $binfmt_path/register
+
+if [ -z "$USE_EXISTING_IMAGE" ]; then
+	echo Entering chroot, downloading and installing second stage rootfs into image...
+	chroot /mnt /debootstrap/debootstrap --second-stage >/dev/null
+fi
+
+echo Running pre-chroot tasks...
+cp $chroot_script_path /mnt/chroot.sh
+# Copy ssh keys + config.
+cp -R /home/$SUDO_USER/.ssh /mnt/
+
+# Git + qemu/arm don't play nice, so clone oh-my-zsh here.
+rm -rf /mnt/oh-my-zsh && mkdir /mnt/oh-my-zsh
+git clone --depth=1 https://github.com/robbyrussell/oh-my-zsh.git /mnt/oh-my-zsh &>/dev/null
+
+echo Running chroot-ed rootfs image config script...
+arch-chroot /mnt /chroot.sh $SUDO_USER $ROOT_PASSWORD
+rm /mnt/chroot.sh
+# arch-chroot mounts the system's /etc/resolv.conf, so do this outside the
+# chroot.
+cat >/mnt/etc/resolv.conf <<EOF
+nameserver 8.8.8.8
+nameserver 8.8.4.4
+EOF
+
+if [ ! -z "$ACCESS_CHROOT" ]; then
+	echo Entering chroot shell...
+	arch-chroot /mnt env -i TERM=ansi PATH=$chroot_path /bin/bash
+	echo ...chroot shell done!
+fi
+
+echo Building linux...
+# Install separately so we can update user on progress separately + not write
+# root owned files!
+NO_DONE=y DONT_INSTALL=y sudo -E -u $SUDO_USER buildLinux aarch64
+
+echo Installing modules into image and generating initrd...
+NO_DONE=y installLinux aarch64
+
+pop
+
+# Pass ownership back to the user.
+give_back $KERNDEV_PATH
+
+[ -z "$NO_DONE" ] && echo Done!
