@@ -29,8 +29,6 @@ function mak()
 case $target_arch in
 aarch64)
 	make_opts="ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu-"
-	# Currently this implies no install.
-	DONT_INSTALL=y
 	;;
 "")
 	;;
@@ -61,7 +59,7 @@ mak -j$((cores + 1))
 
 if [ -z "$DONT_INSTALL" ]; then
 	echo Installing kernel...
-	NO_DONE=y installLinux
+	NO_DONE=y installLinux $target_arch
 fi
 
 pop
