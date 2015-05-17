@@ -10,6 +10,8 @@ LINUX_DEV_PATH=${LINUX_DEV_PATH:-$HOME/linux}
 
 push_linux
 
+# Show extra version info.
+scripts/config --enable localversion_auto
 
 # Required for systemd.
 scripts/config --enable fhandle
