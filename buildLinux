@@ -33,6 +33,8 @@ aarch64)
 	# Make sure we have cross-compilers. `gcc` check should suffice.
 	checkExists aarch64-linux-gnu-gcc
 
+	# For now, always force a rebuild.
+	REBUILD=y
 	make_opts="ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu-"
 	;;
 "x86_64")
