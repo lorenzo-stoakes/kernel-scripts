@@ -94,6 +94,4 @@ pop
 # Pass ownership back to the user.
 give_back $KERNDEV_PATH
 
-if [ -z "$NO_DONE" ]; then
-    echo Done!
-fi
+[ -z "$NO_DONE" ] && echo Done! || true
