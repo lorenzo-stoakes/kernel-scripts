@@ -8,43 +8,57 @@ source shared_kernel_functions.sh
 # Configurable variables.
 LINUX_DEV_PATH=${LINUX_DEV_PATH:-$HOME/linux}
 
+# Functions.
+
+# Configure kernel setting to $1 for settings in $@...
+function config()
+{
+	choice=$1
+	shift
+
+	for setting in $@; do
+		scripts/config --$choice $setting
+	done
+}
+
+# Enable kernal settings $@...
+function kenable()
+{
+	config enable $@
+}
+
+# Disable kernal settings $@...
+function kdisable()
+{
+	config disable $@
+}
+
 push_linux
 
 # Show extra version info.
-scripts/config --enable localversion_auto
+kenable local_version_auto
 
 # Required for systemd.
-scripts/config --enable fhandle
+kenable fhandle
 
 # Disable unneeded wifi interface which spawns spurious debug output.
-scripts/config --disable cfg80211
+kdisable cfg80211
 
 # tun/tap.
-scripts/config --enable tun
+kenable tun
 
 # virtio stuff.
-scripts/config --enable virtio_pci
-scripts/config --enable virtio_mmio
-scripts/config --enable virtio_blk
-scripts/config --enable virtio_net
-scripts/config --enable virtio_console
-scripts/config --disable hw_random_virtio
-scripts/config --enable virtio_pci_legacy
-scripts/config --disable virtio_balloon
-scripts/config --enable virtio_input
-scripts/config --enable virtio_mmio_cmdline_devices
+kenable virtio_pci virtio_mmio virtio_blk virtio_net virtio_console \
+	virtio_pci_legacy virtio_input virtio_mmio_cmdline_devices
+kdisable hw_random_virtio virtio_balloon
 
 # Debugging settings.
-scripts/config --enable debug_info
-scripts/config --disable debug_info_reduced
-scripts/config --enable debug_info_split
-scripts/config --enable debug_info_dwarf4
-scripts/config --enable gdb_scripts
-scripts/config --enable frame_pointer
-scripts/config --disable debug_rodata
+kenable
 
-# Gain access to /proc/config.gz
-scripts/config --enable ikconfig
-scripts/config --enable ikconfig_proc
+kenable debug_info debug_info_split debug_info_dwarf4 gdb_scripts \
+	frame_pointer debug_info_reduced debug_rodata
+
+# Gain access to /proc/config.gz.
+kenable ikconfig ikconfig_proc
 
 pop
