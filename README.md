@@ -17,6 +17,12 @@ The qemu networking code is based on [Jakub Klinkovský][lahwaacz]'s
 [scripts][lahwaacz-scripts], [qemu-launcher.sh][qemu-launcher.sh] is a good
 starting point for this. His code in turn uses [xyne][xyne]'s work.
 
+The following scripts use this 3rd-party code:-
+
+* `kerndev-qemu-tap-helper.sh`
+* `kerndev-nat-launch.sh`
+* `kerndev-nat-launch-subnet.sh`
+
 ## Scripts
 
 __NOTE:__ These scripts are interdependent and assume that the they are all in a
