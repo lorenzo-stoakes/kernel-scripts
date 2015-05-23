@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e; set -o pipefail
 
 # Shared functions, to be `source`d by other scripts.
 

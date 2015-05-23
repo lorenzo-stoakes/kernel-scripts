@@ -1,4 +1,5 @@
-#! /usr/bin/bash
+#!/bin/bash
+set -e; set -o pipefail
 
 # Author: Jakub Klinkovský (Lahwaacz)
 # https://github.com/lahwaacz
