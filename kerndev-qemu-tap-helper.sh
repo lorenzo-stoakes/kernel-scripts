@@ -8,13 +8,15 @@ set -e; set -o pipefail
 
 ## Check if a string represents a network interface
 # $1: potential interface name
-function is_interface() {
+function is_interface()
+{
 	[[ -d "/sys/class/net/$1" ]]
 }
 
 ## Create new TAP interface
 # $1: name of the interface to create
-function create_tap() {
+function create_tap()
+{
 	if ! is_interface "$1"; then
 		echo "Creating TAP interface '$1'"
 		ip tuntap add "$1" mode tap user "$username"
@@ -24,7 +26,8 @@ function create_tap() {
 
 ## Delete TAP interface
 # $1: name of the interface to delete
-function del_tap() {
+function del_tap()
+{
 	echo "Deleting TAP interface '$1'"
 	ip link set dev "$1" down
 	ip tuntap del "$1" mode tap
@@ -32,13 +35,15 @@ function del_tap() {
 
 ## Check if the bridge has any interface
 # $1: bridge interface name
-function bridge_is_empty() {
+function bridge_is_empty()
+{
 	[[ $(ls "/sys/class/net/$1/brif" | wc -w) == "0" ]]
 }
 
 ## Create bridge interface if it does not exist
 # $1: bridge interface name
-function create_br() {
+function create_br()
+{
 	if is_interface "$1"; then
 		if [[ ! -d "/sys/class/net/$1/brif" ]]; then
 			echo "Interface '$1' already exists and is not a bridge"
@@ -58,7 +63,8 @@ function create_br() {
 
 ## Delete bridge interface if it exists and has no interface
 # $1: bridge interface name
-function del_br() {
+function del_br()
+{
 	if bridge_is_empty "$1"; then
 		# Xyne's excellent script to kill NAT
 		echo "Stopping NAT"
@@ -73,7 +79,8 @@ function del_br() {
 ## Add interface to the bridge
 # $1: bridge interface name
 # $2: name of the interface to add
-function br_add_iface() {
+function br_add_iface()
+{
 	echo "Adding interface '$2' to bridge '$1'"
 	ip link set dev "$2" promisc on up
 	ip addr flush dev "$2" scope host #&>/dev/null
@@ -89,7 +96,8 @@ function br_add_iface() {
 ## Remove interface from the bridge
 # $1: bridge interface name
 # $2: name of the interface to remove
-function br_rm_iface() {
+function br_rm_iface()
+{
 	echo "Removing interface '$2' from bridge '$1'"
 	ip link set "$2" promisc off down
 	ip link set dev "$2" nomaster
@@ -97,7 +105,8 @@ function br_rm_iface() {
 
 ########## Main ###############
 
-function print_qemu_tap_helper_usage() {
+function print_qemu_tap_helper_usage()
+{
 	echo "usage: $0 <username> <TAP interface> <bridge interface> <WAN interface> <up|down>"
 	echo "  <TAP interface> and <bridge interface> will be created,"
 	echo "  NAT from <WAN interface> to <bridge interface> will be set up"
