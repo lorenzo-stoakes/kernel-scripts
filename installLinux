@@ -10,13 +10,6 @@ LINUX_DEV_PATH=${LINUX_DEV_PATH:-$HOME/linux}
 # If argument provided it specifies a cross-compile target architecture.
 target_arch=$1
 
-# Functions.
-
-function mak()
-{
-	make $make_opts $@
-}
-
 # Default to x86_64.
 target_arch=${target_arch:-x86_64}
 

@@ -10,16 +10,6 @@ VERBOSE=${VERBOSE:-}
 # If argument provided it specifies a cross-compile target architecture.
 target_arch=$1
 
-# $@: arguments to make.
-function mak()
-{
-	if [ -z $VERBOSE ]; then
-		make $make_opts $@ >/dev/null
-	else
-		make $make_opts $@
-	fi
-}
-
 # Sanity checks.
 [ ! -d $LINUX_DEV_PATH ] && fatal "can't find linux dev path at $LINUX_DEV_PATH"
 [ ! -f $LINUX_DEV_PATH/REPORTING-BUGS ] && \

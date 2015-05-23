@@ -80,3 +80,13 @@ function give_back()
 	[ -z "$SUDO_USER" ] && error "give_back: SUDO_USER not defined." || \
 		chown -R $SUDO_USER:$SUDO_USER $1
 }
+
+# Run make with specified arguments and $make_opts. If $VERBOSE is set, output
+# to controlling terminal, otherwise redirect to /dev/null.
+# $@: make arguments.
+function mak()
+{
+	[ -z $VERBOSE ] && out="null" || out="tty"
+
+	make $make_opts $@ >/dev/$out
+}
