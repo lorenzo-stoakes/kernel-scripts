@@ -55,7 +55,7 @@ function elevate()
 	fi
 }
 
-# Checks whether the specified binaries are available.
+# Checks whether the specified binaries are available on the $PATH.
 # $@: Binaries to check.
 function checkExists()
 {
@@ -74,7 +74,7 @@ function unmount()
 
 # Give ownership of the specified directory to the user (assumes $SUDO_USER is
 # available!)
-# $1: Patch
+# $1: Directory to 'give back' to user $SUDO_USER.
 function give_back()
 {
 	[ -z "$SUDO_USER" ] && error "give_back: SUDO_USER not defined." || \
