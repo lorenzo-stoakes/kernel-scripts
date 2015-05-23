@@ -2,4 +2,4 @@
 set -e; set -o pipefail; source kerndev-shared.sh
 
 # Since we specify an argument (the switch), we can't just pass $@.
-source kerndev-check-lines --max-line-length=1000 ${@:-*.[ch]}
+source kerndev-check-all --max-line-length=1000 ${@:-*.[ch]}

@@ -63,7 +63,7 @@ user-runnable, but are instead ran from other scripts.
 
 * `kerndev-check` - Runs `checkpatch.pl` against the specified files, ignoring
   line length.
-* `kerndev-check-lines` - Runs `checkpatch.pl` against the specified files.
+* `kerndev-check-all` - Runs `checkpatch.pl` against the specified files.
 
 [qemu]:http://wiki.qemu.org/Main_Page
 
