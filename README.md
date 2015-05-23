@@ -22,6 +22,14 @@ starting point for this. His code in turn uses [xyne][xyne]'s work.
 __NOTE:__ Many of these scripts are interdependent and assume they are all
 available on the `PATH`.
 
+### Maintaining
+
+* `updateLinux` - Updates a list of linux trees in specific directories and on
+  specific branches. This is configured to my personal setup, so you _will_ need
+  to edit this script to fit your set up. The list of directories and branches
+  are clearly separated from the actual code that updates so this is a quick
+  task.
+
 ### Generating
 
 * `makeLinux` - Creates a [qemu][qemu] kernel development environment. The image
