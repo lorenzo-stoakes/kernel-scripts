@@ -12,10 +12,11 @@ chroot_path="/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin"
 
 # Functions.
 
-function cleanup() {
+function cleanup()
+{
 	[ -f $binfmt_path/aarch64 ] && echo -1 > $binfmt_path/aarch64
 	rm -f /mnt/usr/bin/qemu-aarch64-static
-	umount /mnt &>/dev/null || true
+	unmount
 }
 
 # Sanity checks.
