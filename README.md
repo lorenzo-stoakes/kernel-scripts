@@ -8,7 +8,8 @@ Additionally you will need to install appropriate packages, again at some point
 I will try to document the required packages.
 
 The scripts have been expanded to include some rudimentary support for the
-aarch64 architecture.
+aarch64 architecture. To use this functionality, run `makeLinux aarch64` and
+`runLinux aarch64`.
 
 ## Acknowledgements
 
