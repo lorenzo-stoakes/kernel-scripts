@@ -56,7 +56,7 @@ function elevate()
 
 # Checks whether the specified binaries are available on the $PATH.
 # $@: Binaries to check.
-function checkExists()
+function check_exists()
 {
 	for file in $@; do
 		(which $file &>/dev/null) || \

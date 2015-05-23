@@ -21,7 +21,7 @@ esac
 [ ! -f "/etc/arch-release" ] && \
 	fatal This script is designed for arch linux only, sorry!
 
-checkExists kerndev-create.chroot.sh kerndev-build kerndev-install pacstrap \
+check_exists kerndev-create.chroot.sh kerndev-build kerndev-install pacstrap \
 	    truncate mkfs.ext4 arch-chroot
 
 [ ! -z $USE_EXISTING_IMAGE ] && [ ! -f $KERNDEV_PATH/rootfs.img ] && \

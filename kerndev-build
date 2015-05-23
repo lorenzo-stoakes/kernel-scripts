@@ -13,7 +13,7 @@ target_arch=${1:-"x86_64"}
 case $target_arch in
 aarch64)
 	# Make sure we have cross-compilers. `gcc` check should suffice.
-	checkExists aarch64-linux-gnu-gcc
+	check_exists aarch64-linux-gnu-gcc
 
 	# For now, always force a rebuild.
 	REBUILD=y

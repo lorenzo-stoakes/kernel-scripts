@@ -19,7 +19,7 @@ function cleanup() {
 }
 
 # Sanity checks.
-checkExists debootstrap qemu-system-aarch64 qemu-aarch64-static
+check_exists debootstrap qemu-system-aarch64 qemu-aarch64-static
 [ ! -d $binfmt_path ] && fatal "binfmt not available."
 
 [ ! -z $USE_EXISTING_IMAGE ] && [ ! -f $KERNDEV_PATH/$rootfs ] && \
