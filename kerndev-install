@@ -50,7 +50,8 @@ mak modules_install INSTALL_MOD_PATH=/mnt/ >/dev/null
 # No initrd for aarch64, yet.
 if [ "$target_arch" != "aarch64" ]; then
 	echo Installing initrd image...
-	mkinitcpio -r /mnt -k $kernel_image_path -g $initrd_image_path &>/dev/null
+	mkinitcpio -r /mnt -k $kernel_image_path -g $initrd_image_path \
+	    &>/dev/null
 fi
 
 pop
