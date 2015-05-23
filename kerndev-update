@@ -8,7 +8,7 @@ output_format="%-15s\t%s\n"
 # Enter $1, stash if necessary, and store previous branch name in $prevbranch.
 function enterdir()
 {
-	cd $1
+	push $1
 
 	prevbranch=$(git rev-parse --abbrev-ref HEAD)
 
@@ -28,6 +28,8 @@ function exitdir()
 		git stash pop -q
 		unset stashed
 	fi
+
+	pop
 }
 
 # Update kernel tree.
