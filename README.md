@@ -19,8 +19,11 @@ starting point for this. His code in turn uses [xyne][xyne]'s work.
 
 ## Scripts
 
-__NOTE:__ Many of these scripts are interdependent and assume they are all
-available on the `$PATH`.
+__NOTE:__ These scripts are interdependent and assume that the they are all in a
+directory on the `$PATH`.
+
+__NOTE:__ By convention, files that end in `.sh` are not designed to be
+user-runnable, but are instead ran from other scripts.
 
 ### Maintaining
 
