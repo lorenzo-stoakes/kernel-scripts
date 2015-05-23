@@ -83,8 +83,8 @@ esac
 shared_opts="-nographic -m $RAM -s -smp $CORES"
 shared_append="rw root=/dev/vda"
 
-qemu-tap-helper.sh $SUDO_USER $tap_nic $br_nic $wan_nic up
-trap "qemu-tap-helper.sh $SUDO_USER $tap_nic $br_nic $wan_nic down" EXIT
+kerndev-qemu-tap-helper.sh $SUDO_USER $tap_nic $br_nic $wan_nic up
+trap "kerndev-qemu-tap-helper.sh $SUDO_USER $tap_nic $br_nic $wan_nic down" EXIT
 
 # We want access to the underlying user.
 [ -z "$SUDO_USER" ] && fatal please run this using sudo!
