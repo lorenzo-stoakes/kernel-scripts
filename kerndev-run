@@ -76,8 +76,5 @@ shared_append="rw root=/dev/vda"
 kerndev-qemu-tap-helper.sh $SUDO_USER $tap_nic $br_nic $wan_nic up
 trap "kerndev-qemu-tap-helper.sh $SUDO_USER $tap_nic $br_nic $wan_nic down" EXIT
 
-# We want access to the underlying user.
-[ -z "$SUDO_USER" ] && fatal please run this using sudo!
-
 $qemu $shared_opts $arch_opts $net_opts $QEMU_CUSTOM_SETTINGS \
 	-kernel $kernel -append "$shared_append $arch_append"
