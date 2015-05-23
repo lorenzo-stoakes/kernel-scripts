@@ -41,12 +41,13 @@ user-runnable, but are instead ran from other scripts.
 
 ### Generating
 
-* `kerndev-create` - Creates a [qemu][qemu] kernel development environment. The image
-  is an Arch Linux system.
-* `kerndev-build` - Configures and builds the kernel, optionally placing header and
-  module files into the dev env image. It accepts a single optional argument
+* `kerndev-create` - Creates a [qemu][qemu] kernel development environment. The
+  image is an Arch Linux system.
+* `kerndev-build` - Configures and builds the kernel, optionally placing header
+  and module files into the dev env image. It accepts a single optional argument
   which, if provided, specifies a cross-compile target architecture.
-* `kerndev-config` - Sets kernel configuration options for the development environment.
+* `kerndev-config` - Sets kernel configuration options for the development
+  environment.
 * `kerndev-rebuild` - Same as `kerndev-build` but runs `make mrproper` first.
 * `kerndev-install` - Installs header and module files into the dev env
   image. This is invoked by `kerndev-build` unless explicitly disabled.
@@ -60,7 +61,8 @@ user-runnable, but are instead ran from other scripts.
 
 ### Code
 
-* `kerndev-check` - Runs `checkpatch.pl` against the specified files, ignoring line length.
+* `kerndev-check` - Runs `checkpatch.pl` against the specified files, ignoring
+  line length.
 * `kerndev-check-lines` - Runs `checkpatch.pl` against the specified files.
 
 [qemu]:http://wiki.qemu.org/Main_Page
