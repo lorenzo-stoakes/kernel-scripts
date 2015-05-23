@@ -10,7 +10,10 @@ function enterdir()
 {
 	push $1
 
-	prevbranch=$(git rev-parse --abbrev-ref HEAD)
+	prevref=$(git rev-parse --abbrev-ref HEAD)
+	# If this is 'HEAD', we can't find a matching branch so just use the
+	# commit hash instead.
+	[ "$prevref" == "HEAD" ] && prevref=$(git rev-parse HEAD)
 
 	changed=$(git status --porcelain)
 	if [ ! -z "$changed" ]; then
@@ -19,10 +22,10 @@ function enterdir()
 	fi
 }
 
-# Resore $prevbranch, if stashed changes, pop them.
+# Resore $prevref, if stashed changes, pop them.
 function exitdir()
 {
-	git checkout -q $prevbranch
+	git checkout -q $prevref
 
 	if [ ! -z "$stashed" ]; then
 		git stash pop -q
