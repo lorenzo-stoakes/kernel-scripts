@@ -51,7 +51,7 @@ available on the `$PATH`.
 ### Code
 
 * `kerndev-check` - Runs `checkpatch.pl` against the specified files, ignoring line length.
-* `checkStyleLines` - Runs `checkpatch.pl` against the specified files.
+* `kerndev-check-lines` - Runs `checkpatch.pl` against the specified files.
 
 [qemu]:http://wiki.qemu.org/Main_Page
 

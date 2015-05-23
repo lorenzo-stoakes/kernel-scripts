@@ -3,4 +3,4 @@ set -e; set -o pipefail
 
 args=${@:-*.[ch]}
 
-source checkStyleLines --max-line-length=1000 $args
+source kerndev-check-lines --max-line-length=1000 $args
