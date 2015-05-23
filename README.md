@@ -1,11 +1,11 @@
 # Kernel Development Scripts
 
-This is a dump of my kernel development scripts. Some are rough-and-ready and
-specific to my system, and some are more generic. Hopefully I'll get a chance to
-clean them up over time. Generally I assume the distro I'm using (Arch Linux.)
+These are my kernel development scripts. Some are specific to my setup, others
+are more generic. I'm working on making them more generic over time.
 
-Additionally you will need to install appropriate packages, again at some point
-I will try to document the required packages.
+Generally I assume the distro I'm using (Arch Linux.) Additionally you will need
+to install appropriate packages, again at some point I will try to document the
+required packages.
 
 The scripts have been expanded to include some rudimentary support for the
 aarch64 architecture. To use this functionality, run `kerndev-create aarch64`
