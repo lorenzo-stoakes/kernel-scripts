@@ -33,13 +33,13 @@ esac
 [ ! -f "/etc/arch-release" ] && \
 	fatal This script is designed for arch linux only, sorry!
 
-checkExists makeLinux.chroot.sh kerndev-build kerndev-install pacstrap truncate \
-	    mkfs.ext4 arch-chroot
+checkExists kerndev-create.chroot.sh kerndev-build kerndev-install pacstrap \
+	    truncate mkfs.ext4 arch-chroot
 
 [ ! -z $USE_EXISTING_IMAGE ] && [ ! -f $KERNDEV_PATH/rootfs.img ] && \
 	fatal "can't find existing rootfs image"
 
-chroot_script_path=$(which makeLinux.chroot.sh)
+chroot_script_path=$(which kerndev-create.chroot.sh)
 
 # So many commands need sudo, so just force the issue.
 elevate $@
