@@ -1,7 +1,5 @@
 #!/bin/bash
-set -e; set -o pipefail
-
-source kerndev-shared.sh
+set -e; set -o pipefail; source kerndev-shared.sh
 
 output_format="%-15s\t%s\n"
 

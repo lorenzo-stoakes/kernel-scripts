@@ -1,7 +1,5 @@
 #!/bin/bash
-set -e; set -o pipefail
-
-source kerndev-shared.sh
+set -e; set -o pipefail; source kerndev-shared.sh
 
 # Default to all .c and .h files in the directory.
 args=${@:-*.[ch]}

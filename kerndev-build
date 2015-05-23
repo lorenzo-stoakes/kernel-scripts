@@ -1,7 +1,5 @@
 #!/bin/bash
-set -e; set -o pipefail
-
-source kerndev-shared.sh
+set -e; set -o pipefail; source kerndev-shared.sh
 
 # If an argument is provided, it specifies a cross-compile target architecture.
 target_arch=${1:-"x86_64"}

@@ -1,7 +1,5 @@
 #!/bin/bash
-set -e; set -o pipefail
-
-source kerndev-shared.sh
+set -e; set -o pipefail; source kerndev-shared.sh
 
 case $1 in
 	"aarch64")

@@ -1,7 +1,5 @@
 #!/bin/bash
-set -e; set -o pipefail
-
-source kerndev-shared.sh
+set -e; set -o pipefail; source kerndev-shared.sh
 
 # Networking scripts adapted from
 # https://github.com/lahwaacz/archlinux-dotfiles/blob/master/Scripts/qemu-launcher.sh
