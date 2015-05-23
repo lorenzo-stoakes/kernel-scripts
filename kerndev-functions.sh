@@ -58,10 +58,9 @@ function elevate()
 # $@: Binaries to check.
 function checkExists()
 {
-	for f in $@; do
-	if ! (which $f &>/dev/null) then
-		fatal "Can't find required binary '$f' on path"
-	fi
+	for file in $@; do
+		(which $file &>/dev/null) || \
+			fatal "Can't find required binary '$file' on path."
 	done
 }
 
