@@ -8,7 +8,6 @@ set -e; set -o pipefail; source kerndev-shared.sh
 target_arch=${1:-"x86_64"}
 
 tap_limit=10
-tap_nic=$(get_tap_name)
 br_nic="qemu-br0"
 wan_nic="enp2s0"
 mac="de:ad:be:ef:f0:0f"
@@ -24,6 +23,8 @@ function get_tap_name() {
 		fi
 	done
 }
+
+tap_nic=$(get_tap_name)
 
 elevate $@
 
