@@ -10,7 +10,7 @@ function enterdir()
 {
 	push $1
 
-	prevref=$(git rev-parse --abbrev-ref HEAD)
+	prevref=$(git rev-parse --abbrev-ref=strict HEAD)
 	# If this is 'HEAD', we can't find a matching branch so just use the
 	# commit hash instead.
 	[ "$prevref" == "HEAD" ] && prevref=$(git rev-parse HEAD)
