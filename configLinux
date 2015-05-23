@@ -61,4 +61,9 @@ kenable debug_info debug_info_split debug_info_dwarf4 gdb_scripts \
 # Gain access to /proc/config.gz.
 kenable ikconfig ikconfig_proc
 
+# Optionally, we are interested in code coverage.
+if [ ! -z "$ENABLE_GCOV" ]; then
+	kenable debug_fs gcov_kernel gcov_format_autodetect gcov_profile_all
+fi
+
 pop
