@@ -16,7 +16,7 @@ USE_EXISTING_IMAGE=${USE_EXISTING_IMAGE:-}
 case $1 in
 	"aarch64")
 		shift
-		exec makeLinux_aarch64 $@
+		exec kerndev-create-aarch64 $@
 		exit $?
 		;;
 	"x86_64")
