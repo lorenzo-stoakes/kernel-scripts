@@ -7,4 +7,10 @@ args=${@:-*.[ch]}
 # bother with a per-file summary.
 check_opts="-f -q --show-types --no-summary"
 
+# Ensure the files exist, if not, die.
+for file in $args; do
+	(! is_opt $file) && [ ! -f $file ] && \
+		fatal "Can't find $file."
+done
+
 $LINUX_DEV_PATH/scripts/checkpatch.pl $check_opts $args
