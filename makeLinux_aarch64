@@ -110,7 +110,7 @@ echo Building linux...
 NO_DONE=y DONT_INSTALL=y sudo -E -u $SUDO_USER kerndev-build aarch64
 
 echo Installing modules into image and generating initrd...
-NO_DONE=y source installLinux aarch64
+NO_DONE=y source kerndev-install aarch64
 
 pop
 
