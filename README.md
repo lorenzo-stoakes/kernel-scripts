@@ -45,7 +45,7 @@ available on the `$PATH`.
 ### Running
 
 * `runLinux` - Runs the kernel development environment with virtio networking.
-* `debugLinux` - Connects `gdb` to a running dev env. Debugging config options
+* `kerndev-debug` - Connects `gdb` to a running dev env. Debugging config options
   are enabled by `kerndev-build`.
 
 ### Code
