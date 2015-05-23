@@ -71,7 +71,7 @@ x86_64)
 	;;
 esac
 
-shared_opts="-nographic -m $QEMU_RAM -s -smp $QEMU_CORES"
+shared_opts="-nographic -m $QEMU_RAM -smp $QEMU_CORES -s"
 shared_append="rw root=/dev/vda"
 
 kerndev-qemu-tap-helper.sh $SUDO_USER $tap_nic $br_nic $wan_nic up
