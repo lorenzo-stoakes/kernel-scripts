@@ -33,7 +33,6 @@ elevate $@
 
 push_linux
 
-echo Mounting rootfs image...
 unmount
 mount_image $rootfs_image_path
 trap unmount EXIT

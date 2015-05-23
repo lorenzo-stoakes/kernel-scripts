@@ -47,7 +47,6 @@ echo Compiling kernel...
 mak -j$((cores + 1))
 
 if [ -z "$DONT_INSTALL" ]; then
-	echo Installing kernel...
 	NO_DONE=y sudo -E kerndev-install $target_arch
 fi
 
