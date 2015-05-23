@@ -25,8 +25,8 @@ The following scripts use this 3rd-party code:-
 
 ## Scripts
 
-__NOTE:__ These scripts are interdependent and assume that the they are all in a
-directory on the `$PATH`.
+__NOTE:__ These scripts are interdependent and assume that the they are all on
+the `$PATH`.
 
 __NOTE:__ By convention, files that end in `.sh` are not designed to be
 user-runnable, but are instead ran from other scripts.
