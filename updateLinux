@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e; set -o pipefail
 
+output_format="%-15s\t%s\n"
+
 source shared_kernel_functions.sh
 
 # Functions.
@@ -30,64 +32,36 @@ function exitdir()
 	fi
 }
 
-function update() {
-	git checkout -q $1
-	git pull -q --rebase
+# Update kernel tree.
+#
+# $1:    Directory of kernel tree.
+# $2...: Branches to update.
+function update()
+{
+	dir=$1
+	shift
 
-	printf "%20s\t$PWD\n" $1
+	enterdir $dir
+
+	for branch in $@; do
+		git checkout -q $branch
+		git pull -q --rebase
+
+		printf $output_format $branch $PWD
+	done
+
+	exitdir
 }
-
-pushd ~ >/dev/null
 
 echo Updating linux git trees...
 
-# ~~~
+printf $output_format "BRANCH" "DIR"
 
-enterdir ~/linux
-
-update master
-update linux-stable
-update linux-next
-
-exitdir
-
-# ~~~
-
-enterdir ~/linux-stable-queue
-
-update master
-
-exitdir
-
-# ~~~
-
-enterdir ~/linux-staging
-
-update master
-update test
-update staging-next
-update staging-testing
-
-exitdir
-
-# ~~~
-
-enterdir ~/linux-mm
-
-update master
-
-exitdir
-
-# ~~~
-
-enterdir ~/linux-aarch64
-
-update master
-update devel
-update fixes/core
-
-exitdir
-
-popd >/dev/null
+# Your trees may vary :-)
+update ~/linux              master linux-stable linux-next
+update ~/linux-stable-queue master
+update ~/linux-staging      master test staging-next staging-testing
+update ~/linux-mm           master
+update ~/linux-aarch64      master devel fixes/core
 
 [ -z "$NO_DONE" ] && echo Done! || true
