@@ -39,8 +39,8 @@ mount_image $rootfs_image_path
 trap unmount EXIT
 
 echo Installing headers and modules...
-mak headers_install INSTALL_HDR_PATH=/mnt/usr/ >/dev/null
-mak modules_install INSTALL_MOD_PATH=/mnt/ >/dev/null
+mak headers_install INSTALL_HDR_PATH=/mnt/usr/
+mak modules_install INSTALL_MOD_PATH=/mnt/
 
 # No initrd for aarch64, yet.
 if [ "$target_arch" != "aarch64" ]; then
