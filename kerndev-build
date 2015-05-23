@@ -46,8 +46,8 @@ if [ ! -z "$REBUILD" ] || [ ! -f .config ]; then
 	mak defconfig
 fi
 
-source configLinux
-# Set any new options implied by configLinux to default.
+source kerndev-config
+# Set any new options implied by kerndev-config to default.
 mak olddefconfig
 
 echo Compiling kernel...
