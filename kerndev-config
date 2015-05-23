@@ -1,8 +1,6 @@
 #!/bin/bash
 set -e; set -o pipefail; source kerndev-shared.sh
 
-# Configures kernel options for kernel dev env.
-
 # Functions.
 
 # Configure kernel setting to $1 for settings in $@...
