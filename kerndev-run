@@ -55,7 +55,7 @@ aarch64)
 	arch_opts="-machine virt
 	-cpu cortex-a57
 	-machine type=virt,kernel_irqchip=on
-	-drive if=none,file=$rootfs,id=vda
+	-drive if=none,file=$rootfs,id=vda,format=raw
 	-device virtio-blk-device,drive=vda"
 
 	arch_append="console=ttyAMA0"
@@ -69,7 +69,7 @@ aarch64)
 
 	arch_opts="-enable-kvm
 	-cpu host
-	-drive file=$rootfs,if=virtio,cache=none
+	-drive file=$rootfs,if=virtio,cache=none,format=raw
 	-boot once=c
 	-initrd $initrd"
 	arch_append="console=ttyS0"
