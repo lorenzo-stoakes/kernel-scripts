@@ -101,7 +101,7 @@ echo Building linux...
 NO_DONE=y DONT_INSTALL=y sudo -E -u $SUDO_USER buildLinux
 
 echo Installing modules into image and generating initrd...
-NO_DONE=y installLinux
+NO_DONE=y source installLinux
 
 pop
 
