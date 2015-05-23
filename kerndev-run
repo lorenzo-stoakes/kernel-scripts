@@ -6,14 +6,6 @@ source kerndev-shared.sh
 # Networking scripts adapted from
 # https://github.com/lahwaacz/archlinux-dotfiles/blob/master/Scripts/qemu-launcher.sh
 
-# Configurable variables.
-LINUX_DEV_PATH=${LINUX_DEV_PATH:-$HOME/linux}
-KERNDEV_PATH=${KERNDEV_PATH:-$HOME/kerndev}
-RAM=${RAM:-4G}
-CORES=${CORES:-4}
-# E.g. -usbdevice host:3.5
-DEVICE_SETTINGS=${DEVICE_SETTINGS:-}
-
 # If argument provided it specifies a cross-compile target architecture.
 target_arch=$1
 
@@ -80,7 +72,7 @@ aarch64)
 	;;
 esac
 
-shared_opts="-nographic -m $RAM -s -smp $CORES"
+shared_opts="-nographic -m $QEMU_RAM -s -smp $QEMU_CORES"
 shared_append="rw root=/dev/vda"
 
 kerndev-qemu-tap-helper.sh $SUDO_USER $tap_nic $br_nic $wan_nic up
@@ -89,5 +81,5 @@ trap "kerndev-qemu-tap-helper.sh $SUDO_USER $tap_nic $br_nic $wan_nic down" EXIT
 # We want access to the underlying user.
 [ -z "$SUDO_USER" ] && fatal please run this using sudo!
 
-$qemu $shared_opts $arch_opts $net_opts $DEVICE_SETTINGS \
+$qemu $shared_opts $arch_opts $net_opts $QEMU_CUSTOM_SETTINGS \
 	-kernel $kernel -append "$shared_append $arch_append"

@@ -3,10 +3,6 @@ set -e; set -o pipefail
 
 source kerndev-shared.sh
 
-# Configurable variables.
-KERNDEV_PATH=${KERNDEV_PATH:-$HOME/kerndev}
-LINUX_DEV_PATH=${LINUX_DEV_PATH:-$HOME/linux}
-
 # If argument provided it specifies a cross-compile target architecture.
 target_arch=$1
 

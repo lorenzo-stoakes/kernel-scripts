@@ -5,27 +5,11 @@ source kerndev-shared.sh
 
 # TODO: Duplicates kerndev-create, lots of copy-pasta, de-duplicate!!
 
-default_packages="netbase,ifupdown,net-tools,dhcpcd5,iproute,wget,sudo,zsh,curl,\
-ca-certificates,man-db,git,pciutils,usbutils,iputils-ping,less,nano,kmod"
-
-# Configurable variables.
-SIZE=${SIZE:-30G}
-KERNDEV_PATH=${KERNDEV_PATH:-$HOME/kerndev}
-DEBIAN_MIRROR=${DEBIAN_MIRROR:-http://mirror.positive-internet.com/debian}
-DEBIAN_VERSION=${DEBIAN_VERSION:-jessie}
-PACKAGES=${PACKAGES:-$default_packages}
-# Set to use existing rootfs image + not repopulate rootfs.
-USE_EXISTING_IMAGE=${USE_EXISTING_IMAGE:-}
-ACCESS_CHROOT=${ACCESS_CHROOT:-}
-
 binfmt_path=/proc/sys/fs/binfmt_misc
-
 binfmt_aarch64=":aarch64:M::\x7fELF\x02\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\
 \x00\x02\x00\xb7:\xff\xff\xff\xff\xff\xff\xff\x00\xff\xff\xff\xff\xff\xff\xff\
 \xff\xfe\xff\xff:/usr/bin/qemu-aarch64-static:"
-
 rootfs=rootfs_aarch64.img
-
 chroot_path="/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin"
 
 # Functions.
@@ -57,7 +41,7 @@ push_kerndev
 if [ -z "$USE_EXISTING_IMAGE" ]; then
 	echo Creating and formatting rootfs image file...
 	rm -f $rootfs
-	truncate -s $SIZE $rootfs
+	truncate -s $IMAGE_SIZE $rootfs
 	mkfs.ext4 -q $rootfs
 fi
 
@@ -66,8 +50,10 @@ trap cleanup EXIT
 
 if [ -z "$USE_EXISTING_IMAGE" ]; then
 	echo "Downloading and installing first stage rootfs into image..."
-	debootstrap --arch=arm64 --variant=minbase --foreign --include=$PACKAGES \
-		$DEBIAN_VERSION /mnt $DEBIAN_MIRROR >/dev/null
+
+	debootstrap --arch=arm64 --variant=minbase --foreign  \
+		--include=$DEBIAN_PACKAGES $DEBIAN_VERSION /mnt $DEBIAN_MIRROR \
+		>/dev/null
 fi
 
 echo Enabling binfmt for chroot...

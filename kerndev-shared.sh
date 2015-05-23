@@ -1,6 +1,9 @@
 #!/bin/bash
 set -e; set -o pipefail
 
+# Load default variable settings.
+source kerndev-defaults.sh
+
 # Shared functions, to be `source`d by other scripts.
 
 # Displays parameteters with command name prepended, outputted to stderr.

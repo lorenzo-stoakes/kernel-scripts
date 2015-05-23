@@ -3,16 +3,6 @@ set -e; set -o pipefail
 
 source kerndev-shared.sh
 
-# Configurable variables.
-SIZE=${SIZE:-30G}
-KERNDEV_PATH=${KERNDEV_PATH:-$HOME/kerndev}
-# Set to run a chrooted shell in mounted rootfs image.
-ACCESS_CHROOT=${ACCESS_CHROOT:-}
-# Set to define a root password for the dev env, otherwise will prompt.
-ROOT_PASSWORD=${ROOT_PASSWORD:-}
-# Set to use existing rootfs image + not repopulate rootfs.
-USE_EXISTING_IMAGE=${USE_EXISTING_IMAGE:-}
-
 case $1 in
 	"aarch64")
 		shift
@@ -58,7 +48,7 @@ push_kerndev
 if [ -z "$USE_EXISTING_IMAGE" ]; then
 	echo Creating and formatting rootfs image file...
 	rm -f rootfs.img
-	truncate -s $SIZE rootfs.img
+	truncate -s $IMAGE_SIZE rootfs.img
 	mkfs.ext4 -q rootfs.img
 else
 	echo Using existing rootfs...

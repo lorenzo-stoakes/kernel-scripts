@@ -3,9 +3,6 @@ set -e; set -o pipefail
 
 source kerndev-shared.sh
 
-# Configurable variables.
-LINUX_DEV_PATH=${LINUX_DEV_PATH:-$HOME/linux}
-
 push_linux
 
 gdb vmlinux --ex "target remote localhost:1234"

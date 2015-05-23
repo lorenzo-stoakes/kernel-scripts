@@ -1,8 +1,7 @@
 #!/bin/bash
 set -e; set -o pipefail
 
-# Configurable variables.
-LINUX_DEV_PATH=${LINUX_DEV_PATH:-$HOME/linux}
+source kerndev-shared.sh
 
 # Default to all .c and .h files in the directory.
 args=${@:-*.[ch]}
