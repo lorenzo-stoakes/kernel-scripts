@@ -64,4 +64,4 @@ update ~/linux-staging      master test staging-next staging-testing
 update ~/linux-mm           master
 update ~/linux-aarch64      master devel fixes/core
 
-[ -z "$NO_DONE" ] && echo Done! || true
+say_done

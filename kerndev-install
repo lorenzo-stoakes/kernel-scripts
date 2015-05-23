@@ -51,4 +51,4 @@ fi
 
 pop
 
-[ -z "$NO_DONE" ] && echo Done! || true
+say_done

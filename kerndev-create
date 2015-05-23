@@ -96,4 +96,4 @@ pop
 # Pass ownership back to the user.
 give_back $KERNDEV_PATH
 
-[ -z "$NO_DONE" ] && echo Done! || true
+say_done
