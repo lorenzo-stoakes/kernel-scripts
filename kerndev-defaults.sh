@@ -31,10 +31,14 @@ QEMU_RAM=${QEMU_RAM:-4G}
 
 # Run a chroot script in the development image.
 ACCESS_CHROOT=${ACCESS_CHROOT:-}
+# kerndev-build: If set, don't run kerndev-install after building.
+DONT_INSTALL=${DONT_INSTALL:-}
 # Enable gcov configuration settings.
 ENABLE_GCOV=${ENABLE_GCOV:-}
 # Do not say 'Done!' when done :)
 NO_DONE=${NO_DONE:-}
+# kerndev-build: If set, forces rebuild.
+REBUILD=${REBUILD:-}
 # Set to define a root password, otherwise prompts for one on kerndev-create.
 ROOT_PASSWORD=${ROOT_PASSWORD:-}
 # If set, uses existing rootfs image on kerndev-create rather than creating a
