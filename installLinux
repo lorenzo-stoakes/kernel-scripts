@@ -50,9 +50,9 @@ elevate $@
 push_linux
 
 echo Mounting rootfs image...
-umount /mnt &>/dev/null || true
+unmount
 mount -o loop $rootfs_image_path /mnt
-trap "umount /mnt" EXIT
+trap unmount EXIT
 
 echo Installing headers and modules...
 mak headers_install INSTALL_HDR_PATH=/mnt/usr/ >/dev/null
