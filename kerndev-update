@@ -5,7 +5,7 @@ output_format="%-15s\t%s\n"
 
 # Functions.
 
-# Enter $1, stash if necessary, and store previous branch name in $prevbranch.
+# Enter $1, stash if necessary, and store previous reference in $prevref.
 function enterdir()
 {
 	push $1
