@@ -5,7 +5,7 @@ set -e; set -o pipefail; source kerndev-shared.sh
 # https://github.com/lahwaacz/archlinux-dotfiles/blob/master/Scripts/qemu-launcher.sh
 
 # If argument provided it specifies a cross-compile target architecture.
-target_arch=$1
+target_arch=${1:-"x86_64"}
 
 # Functions.
 
@@ -50,7 +50,7 @@ aarch64)
 
 	arch_append="console=ttyAMA0"
 	;;
-"")
+x86_64)
 	qemu=qemu-system-x86_64
 
 	kernel=$LINUX_DEV_PATH/arch/x86/boot/bzImage
