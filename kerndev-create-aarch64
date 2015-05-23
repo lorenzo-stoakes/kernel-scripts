@@ -46,7 +46,7 @@ checkExists debootstrap qemu-system-aarch64 qemu-aarch64-static
 # So many commands need sudo, so just force the issue.
 elevate $@
 
-chroot_script_path=$(which makeLinux_aarch64.chroot.sh)
+chroot_script_path=$(which kerndev-create-aarch64.chroot.sh)
 
 unmount
 
