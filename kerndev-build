@@ -4,15 +4,13 @@ set -e; set -o pipefail
 source kerndev-shared.sh
 
 # If an argument is provided, it specifies a cross-compile target architecture.
-target_arch=$1
+target_arch=${1:-"x86_64"}
 
 # Sanity checks.
 [ ! -d $LINUX_DEV_PATH ] && fatal "can't find linux dev path at $LINUX_DEV_PATH"
 [ ! -f $LINUX_DEV_PATH/REPORTING-BUGS ] && \
 	fatal "Doesn't look like a linux dev path: $LINUX_DEV_PATH"
 [ $EUID = 0 ] && fatal "Don't run as root, causes file ownership pain"
-
-target_arch=${target_arch:-"x86_64"}
 
 case $target_arch in
 aarch64)
