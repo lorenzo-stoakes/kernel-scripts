@@ -5,7 +5,9 @@ source shared_kernel_functions.sh
 
 # Functions.
 
-function enterdir() {
+# Enter $1, stash if necessary, and store previous branch name in $prevbranch.
+function enterdir()
+{
 	cd $1
 
 	prevbranch=$(git rev-parse --abbrev-ref HEAD)
@@ -17,7 +19,9 @@ function enterdir() {
 	fi
 }
 
-function exitdir() {
+# Resore $prevbranch, if stashed changes, pop them.
+function exitdir()
+{
 	git checkout -q $prevbranch
 
 	if [ ! -z "$stashed" ]; then
