@@ -32,6 +32,6 @@ dnsmasq_lease=/run/dnsmasq.lease
 dnsmasq_port=0
 dnsmasq_dhcp_range="192.168.1.100,192.168.1.150,6h"
 
-source nat-launch-subnet.sh
+source kerndev-nat-launch-subnet.sh
 
 launch_subnet "$action"
