@@ -33,7 +33,7 @@ esac
 [ ! -f "/etc/arch-release" ] && \
 	fatal This script is designed for arch linux only, sorry!
 
-checkExists makeLinux.chroot.sh buildLinux installLinux pacstrap truncate \
+checkExists makeLinux.chroot.sh kerndev-build installLinux pacstrap truncate \
 	    mkfs.ext4 arch-chroot
 
 [ ! -z $USE_EXISTING_IMAGE ] && [ ! -f $KERNDEV_PATH/rootfs.img ] && \
@@ -98,7 +98,7 @@ trap - EXIT
 echo Building linux...
 # Install separately so we can update user on progress separately, also this
 # means we can run as the user and thus not write root owned files!
-NO_DONE=y DONT_INSTALL=y sudo -E -u $SUDO_USER buildLinux
+NO_DONE=y DONT_INSTALL=y sudo -E -u $SUDO_USER kerndev-build
 
 echo Installing modules into image and generating initrd...
 NO_DONE=y source installLinux

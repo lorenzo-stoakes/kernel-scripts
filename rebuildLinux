@@ -2,4 +2,4 @@
 set -e; set -o pipefail
 
 echo Forcing rebuild of kernel...
-REBUILD=y source buildLinux $@
+REBUILD=y source kerndev-build $@

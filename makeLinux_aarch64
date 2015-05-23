@@ -107,7 +107,7 @@ fi
 echo Building linux...
 # Install separately so we can update user on progress separately + not write
 # root owned files!
-NO_DONE=y DONT_INSTALL=y sudo -E -u $SUDO_USER buildLinux aarch64
+NO_DONE=y DONT_INSTALL=y sudo -E -u $SUDO_USER kerndev-build aarch64
 
 echo Installing modules into image and generating initrd...
 NO_DONE=y source installLinux aarch64
