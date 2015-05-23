@@ -29,13 +29,13 @@ QEMU_RAM=${QEMU_RAM:-4G}
 # Configuration options which default to being unset, included here for
 # documentation:-
 
-# Run a chroot script in the development image.
+# If set, run a chroot script in the development image.
 ACCESS_CHROOT=${ACCESS_CHROOT:-}
 # kerndev-build: If set, don't run kerndev-install after building.
 DONT_INSTALL=${DONT_INSTALL:-}
-# Enable gcov configuration settings.
+# If set, enable gcov configuration settings.
 ENABLE_GCOV=${ENABLE_GCOV:-}
-# Do not say 'Done!' when done :)
+# If set, do not say 'Done!' when done :)
 NO_DONE=${NO_DONE:-}
 # kerndev-build: If set, forces rebuild.
 REBUILD=${REBUILD:-}
@@ -46,6 +46,6 @@ ROOT_PASSWORD=${ROOT_PASSWORD:-}
 USE_EXISTING_IMAGE=${USE_EXISTING_IMAGE:-}
 # If set, output from make is not silenced.
 VERBOSE=${VERBOSE:-}
-# Custom qemu settings, e.g. a USB device pass-through like '-usbdevice
-# host:3.5'.
+# Custom qemu settings, e.g. a USB device pass-through like
+# '-usbdevice host:3.5'.
 QEMU_CUSTOM_SETTINGS=${QEMU_CUSTOM_SETTINGS:-}
