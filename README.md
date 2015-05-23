@@ -38,7 +38,7 @@ available on the `$PATH`.
   module files into the dev env image. It accepts a single optional argument
   which, if provided, specifies a cross-compile target architecture.
 * `configLinux` - Sets kernel configuration options for the development environment.
-* `rebuildLinux` - Same as `kerndev-build` but runs `make mrproper` first.
+* `kerndev-rebuild` - Same as `kerndev-build` but runs `make mrproper` first.
 * `installLinux` - Installs header and module files into the dev env image. This
   is invoked by `kerndev-build` unless explicitly disabled.
 
