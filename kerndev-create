@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e; set -o pipefail
 
-source shared_kernel_functions.sh
+source kerndev-shared.sh
 
 # Configurable variables.
 SIZE=${SIZE:-30G}

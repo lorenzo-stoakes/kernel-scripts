@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e; set -o pipefail
 
-source shared_kernel_functions.sh
+source kerndev-shared.sh
 
 # Configurable variables.
 KERNDEV_PATH=${KERNDEV_PATH:-$HOME/kerndev}

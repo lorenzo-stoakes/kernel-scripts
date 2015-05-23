@@ -3,7 +3,7 @@ set -e; set -o pipefail
 
 # Configures kernel options for kernel dev env.
 
-source shared_kernel_functions.sh
+source kerndev-shared.sh
 
 # Configurable variables.
 LINUX_DEV_PATH=${LINUX_DEV_PATH:-$HOME/linux}

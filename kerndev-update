@@ -1,9 +1,9 @@
 #!/bin/bash
 set -e; set -o pipefail
 
-output_format="%-15s\t%s\n"
+source kerndev-shared.sh
 
-source shared_kernel_functions.sh
+output_format="%-15s\t%s\n"
 
 # Functions.
 
