@@ -89,3 +89,10 @@ function mak()
 
 	make $make_opts $@ >/dev/$out
 }
+
+# Determines if the argument is an command-line option.
+# $1: Argument.
+function is_opt()
+{
+	[[ $1 == -* ]]
+}
