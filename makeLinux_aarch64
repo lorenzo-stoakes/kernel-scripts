@@ -3,7 +3,7 @@ set -e; set -o pipefail
 
 source shared_kernel_functions.sh
 
-# TODO: Duplicates makeLinux, lots of copy-pasta, de-duplicate!!
+# TODO: Duplicates kerndev-create, lots of copy-pasta, de-duplicate!!
 
 default_packages="netbase,ifupdown,net-tools,dhcpcd5,iproute,wget,sudo,zsh,curl,\
 ca-certificates,man-db,git,pciutils,usbutils,iputils-ping,less,nano,kmod"
