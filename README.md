@@ -9,7 +9,7 @@ I will try to document the required packages.
 
 The scripts have been expanded to include some rudimentary support for the
 aarch64 architecture. To use this functionality, run `kerndev-create aarch64`
-and `kerndev-run aarch64`.
+(or `kerndev-create-aarch64`) and `kerndev-run aarch64`.
 
 ## Acknowledgements
 
