@@ -44,7 +44,7 @@ if [ -z "$USE_EXISTING_IMAGE" ]; then
 	mkfs.ext4 -q $rootfs
 fi
 
-mount -o loop $rootfs /mnt
+mount_image $rootfs
 trap cleanup EXIT
 
 if [ -z "$USE_EXISTING_IMAGE" ]; then
