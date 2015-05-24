@@ -37,6 +37,9 @@ DONT_INSTALL=${DONT_INSTALL:-}
 ENABLE_GCOV=${ENABLE_GCOV:-}
 # If set, do not say 'Done!' when done :)
 NO_DONE=${NO_DONE:-}
+# Custom qemu settings, e.g. a USB device pass-through like
+# '-usbdevice host:3.5'.
+QEMU_CUSTOM_SETTINGS=${QEMU_CUSTOM_SETTINGS:-}
 # kerndev-build: If set, forces rebuild.
 REBUILD=${REBUILD:-}
 # Set to define a root password, otherwise prompts for one on kerndev-create.
@@ -46,6 +49,3 @@ ROOT_PASSWORD=${ROOT_PASSWORD:-}
 USE_EXISTING_IMAGE=${USE_EXISTING_IMAGE:-}
 # If set, output from make is not silenced.
 VERBOSE=${VERBOSE:-}
-# Custom qemu settings, e.g. a USB device pass-through like
-# '-usbdevice host:3.5'.
-QEMU_CUSTOM_SETTINGS=${QEMU_CUSTOM_SETTINGS:-}
