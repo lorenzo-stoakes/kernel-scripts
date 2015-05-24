@@ -53,8 +53,7 @@ kenable debug_info debug_info_split debug_info_dwarf4 gdb_scripts \
 kenable ikconfig ikconfig_proc
 
 # Optionally, we are interested in code coverage.
-if [ ! -z "$ENABLE_GCOV" ]; then
+[ ! -z "$ENABLE_GCOV" ] && \
 	kenable debug_fs gcov_kernel gcov_format_autodetect gcov_profile_all
-fi
 
 pop
