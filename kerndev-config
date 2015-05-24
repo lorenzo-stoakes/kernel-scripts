@@ -46,8 +46,6 @@ kenable virtio_pci virtio_mmio virtio_blk virtio_net virtio_console \
 kdisable hw_random_virtio virtio_balloon
 
 # Debugging settings.
-kenable
-
 kenable debug_info debug_info_split debug_info_dwarf4 gdb_scripts \
 	frame_pointer debug_info_reduced debug_rodata
 
