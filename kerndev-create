@@ -1,16 +1,16 @@
 #!/bin/bash
 set -e; set -o pipefail; source kerndev-shared.sh
 
-case $1 in
+# If an argument is provided, it specifies a cross-compile target architecture.
+target_arch=${1:-"x86_64"}
+
+case $target_arch in
 	"aarch64")
 		shift
 		exec kerndev-create-aarch64 $@
 		exit $?
 		;;
 	"x86_64")
-		;;
-	# If no arguments, assume x86_64.
-	"")
 		;;
 	 *)
 		 fatal Unknown arch $1.
