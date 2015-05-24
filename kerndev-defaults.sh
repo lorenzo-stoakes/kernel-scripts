@@ -19,7 +19,7 @@ DEBIAN_VERSION=${DEBIAN_VERSION:-jessie}
 # Size of image created by kerndev-create.
 IMAGE_SIZE=${IMAGE_SIZE:-30G}
 # Location to store image files in.
-KERNDEV_PATH=${KERNDEV_PATH:-$HOME/kerndev}
+KERNDEV_PATH=${KERNDEV_PATH:-$HOME/images}
 # Location containing the kernel source code.
 LINUX_DEV_PATH=${LINUX_DEV_PATH:-$HOME/linux}
 # QEMU settings.
