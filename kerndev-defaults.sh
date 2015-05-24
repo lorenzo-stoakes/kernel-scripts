@@ -5,8 +5,8 @@ set -e; set -o pipefail
 # that can be set when running kerndev- scripts along with default values where
 # appropriate.
 
-default_debian_packages="netbase,ifupdown,net-tools,dhcpcd5,iproute,wget,sudo,
-zsh,curl,ca-certificates,man-db,git,pciutils,usbutils,iputils-ping,less,nano,
+default_debian_packages="netbase,ifupdown,net-tools,dhcpcd5,iproute,wget,sudo,\
+zsh,curl,ca-certificates,man-db,git,pciutils,usbutils,iputils-ping,less,nano,\
 kmod"
 
 # Configuration options with default values:-
