@@ -7,10 +7,10 @@ target_arch=${1:-"x86_64"}
 case $target_arch in
 aarch64)
 	make_opts="ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu-"
-	rootfs_image_path=$KERNDEV_PATH/rootfs_aarch64.img
+	rootfs=rootfs_aarch64.img
 	;;
 x86_64)
-	rootfs_image_path=$KERNDEV_PATH/rootfs.img
+	rootfs=rootfs.img
 	initrd_image_path=$KERNDEV_PATH/init.img
 	kernel_image_path=$LINUX_DEV_PATH/arch/x86/boot/bzImage
 
@@ -26,6 +26,7 @@ esac
 
 # Sanity checks.
 
+rootfs_image_path=$KERNDEV_PATH/$rootfs
 [ ! -f $rootfs_image_path ] && \
 	fatal "can't find root fs image at $rootfs_image_path"
 
@@ -34,7 +35,7 @@ elevate $@
 push_linux
 
 unmount
-mount_image $rootfs_image_path
+mount_image $rootfs
 trap unmount EXIT
 
 echo Installing headers and modules...

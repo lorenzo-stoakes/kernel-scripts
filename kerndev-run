@@ -39,14 +39,13 @@ case $target_arch in
 aarch64)
 	qemu=qemu-system-aarch64
 
-	kernel=$LINUX_DEV_PATH/arch/arm64/boot/Image
-	initrd=$KERNDEV_PATH/init_aarch64.img
-	rootfs=$KERNDEV_PATH/rootfs_aarch64.img
+	kernel_image_path=$LINUX_DEV_PATH/arch/arm64/boot/Image
+	rootfs_image_path=$KERNDEV_PATH/rootfs_aarch64.img
 
 	arch_opts="-machine virt
 	-cpu cortex-a57
 	-machine type=virt,kernel_irqchip=on
-	-drive if=none,file=$rootfs,id=vda,format=raw
+	-drive if=none,file=$rootfs_image_path,id=vda,format=raw
 	-device virtio-blk-device,drive=vda"
 
 	arch_append="console=ttyAMA0"
@@ -54,15 +53,15 @@ aarch64)
 x86_64)
 	qemu=qemu-system-x86_64
 
-	kernel=$LINUX_DEV_PATH/arch/x86/boot/bzImage
-	initrd=$KERNDEV_PATH/init.img
-	rootfs=$KERNDEV_PATH/rootfs.img
+	kernel_image_path=$LINUX_DEV_PATH/arch/x86/boot/bzImage
+	initrd_image_path=$KERNDEV_PATH/init.img
+	rootfs_image_path=$KERNDEV_PATH/rootfs.img
 
 	arch_opts="-enable-kvm
 	-cpu host
-	-drive file=$rootfs,if=virtio,cache=none,format=raw
+	-drive file=$rootfs_image_path,if=virtio,cache=none,format=raw
 	-boot once=c
-	-initrd $initrd"
+	-initrd $initrd_image_path"
 	arch_append="console=ttyS0"
 
 	;;
@@ -78,4 +77,4 @@ kerndev-qemu-tap-helper.sh $SUDO_USER $tap_nic $br_nic $wan_nic up
 trap "kerndev-qemu-tap-helper.sh $SUDO_USER $tap_nic $br_nic $wan_nic down" EXIT
 
 $qemu $shared_opts $arch_opts $net_opts $QEMU_CUSTOM_SETTINGS \
-	-kernel $kernel -append "$shared_append $arch_append"
+	-kernel $kernel_image_path -append "$shared_append $arch_append"

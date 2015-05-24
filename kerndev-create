@@ -52,7 +52,7 @@ else
 	echo Using existing rootfs...
 fi
 
-mount_image
+mount_image rootfs.img
 trap "umount /mnt" EXIT
 
 if [ -z "$USE_EXISTING_IMAGE" ]; then

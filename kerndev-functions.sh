@@ -65,11 +65,10 @@ function check_exists()
 }
 
 # Loop mount image file into /mnt.
-# $1: Image file to mount, if not specified, defaults to
-# $KERNDEV_PATH/rootfs.img.
+# $1: Image file to mount, in $KERNDEV_PATH.
 function mount_image()
 {
-	mount -o loop ${1:-$KERNDEV_PATH/rootfs.img} /mnt
+	mount -o loop $KERNDEV_PATH/$1 /mnt
 }
 
 # Attempt to unmount /mnt, ignore any failures.
