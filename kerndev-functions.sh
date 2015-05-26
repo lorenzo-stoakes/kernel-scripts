@@ -74,6 +74,9 @@ function mount_image()
 # Attempt to unmount /mnt, ignore any failures.
 function unmount()
 {
+	# This _can_ be dangerous, theoretically, but this is usually shortly
+	# followed by an attempt at a mount, which if the unmount fails, will
+	# also fail and end the script with an error.
 	umount /mnt &>/dev/null || true
 }
 
