@@ -94,6 +94,8 @@ NO_DONE=y source kerndev-install
 pop
 
 # Pass ownership back to the user.
+# Executing this outside of the chroot probably means uids need to be
+# synced. TODO: Fix.
 give_back $KERNDEV_PATH
 
 say_done
