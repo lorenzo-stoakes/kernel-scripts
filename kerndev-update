@@ -28,7 +28,7 @@ function exitdir()
 	git checkout -q $prevref
 
 	if [ ! -z "$stashed" ]; then
-		git stash pop -q
+		git stash pop -q >/dev/null
 		unset stashed
 	fi
 
