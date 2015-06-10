@@ -64,7 +64,7 @@ printf $output_format "BRANCH" "DIR"
 update ~/linux              master linux-stable linux-next
 update ~/linux-stable-queue master
 update ~/linux-staging      master test staging-next staging-testing
-update ~/linux-mm           master
+update ~/linux-mm           master since-4.0
 update ~/linux-aarch64      master devel fixes/core
 
 say_done
