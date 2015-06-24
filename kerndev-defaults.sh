@@ -40,7 +40,7 @@ QEMU_RAM=${QEMU_RAM:-$qemu_ram_default}
 ACCESS_CHROOT=${ACCESS_CHROOT:-}
 # kerndev-build: If set, don't run kerndev-install after building.
 DONT_INSTALL=${DONT_INSTALL:-}
-# If set, enable gcov configuration settings.
+# If set, enable gcov configuration settings, and copy kernel source into image.
 ENABLE_GCOV=${ENABLE_GCOV:-}
 # If set, do not say 'Done!' when done :)
 NO_DONE=${NO_DONE:-}
