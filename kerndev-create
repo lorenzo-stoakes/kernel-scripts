@@ -72,7 +72,26 @@ cat >/mnt/etc/resolv.conf <<EOF
 nameserver 8.8.8.8
 nameserver 8.8.4.4
 EOF
+
 echo ...chroot-ed script complete!
+
+if [ -z "$USE_EXISTING_IMAGE" ] && [ ! -z "$ENABLE_GCOV" ]; then
+	# Create 'cov' tool to check coverage for a specific file in the kernel tree.
+	cov_path=/mnt/usr/bin/cov
+
+	cat >$cov_path <<EOF
+#!/bin/bash
+
+[ -z "\$1" ] && echo "usage: \$(basename \$0) [relative path to source file]" >&2 && exit 1
+
+sudo gcov -o /sys/kernel/debug/gcov/$LINUX_DEV_PATH/\$(dirname \$1) /home/$SUDO_USER/linux/\$1
+EOF
+	chmod +x $cov_path
+	give_back $cov_path
+
+	pop
+fi
+
 if [ ! -z "$ACCESS_CHROOT" ]; then
 	echo Entering chroot shell...
 	arch-chroot /mnt
