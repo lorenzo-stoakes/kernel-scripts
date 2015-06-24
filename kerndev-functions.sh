@@ -27,7 +27,7 @@ function push()
 # Pops directory off pushd stack without outputting anything.
 function pop()
 {
-	popd >/dev/null
+	popd &>/dev/null || true
 }
 
 # Pushes into linux dev directory (at $LINUX_DEV_PATH), assumes this variable is
