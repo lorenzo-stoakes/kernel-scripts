@@ -49,6 +49,28 @@ if [ "$target_arch" != "aarch64" ]; then
 	    &>/dev/null
 fi
 
+if [ -z "$USE_EXISTING_IMAGE" ] && [ ! -z "$ENABLE_GCOV" ]; then
+	# We need to copy the linux source code to be able to gcov it.
+	echo "Copying linux source to image (gcov)..."
+
+	image_linux_dev_path=/mnt/home/$SUDO_USER/linux
+
+	rm -rf $image_linux_dev_path
+	mkdir $image_linux_dev_path
+
+	# Create dir structure.
+	find . -type d | xargs -i mkdir -p $image_linux_dev_path/{}
+
+	# Adapted from https://www.kernel.org/doc/Documentation/gcov.txt
+	# But you need .o files too...? so the docs are wrong? TODO: Investigate...
+	find -name '*.gcno' -o -name '*.[choS]' -o -type l | \
+	    xargs -i cp -a {} $image_linux_dev_path/{}
+
+	# Executing this outside of the chroot probably means uids need to be
+	# synced. TODO: Fix.
+	give_back $image_linux_dev_path
+fi
+
 pop
 
 say_done
