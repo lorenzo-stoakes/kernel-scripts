@@ -5,26 +5,33 @@ set -e; set -o pipefail
 # that can be set when running kerndev- scripts along with default values where
 # appropriate.
 
-default_debian_packages="netbase,ifupdown,net-tools,dhcpcd5,iproute,wget,sudo,\
+debian_mirror_default=http://mirror.positive-internet.com/debian
+debian_packages_default="netbase,ifupdown,net-tools,dhcpcd5,iproute,wget,sudo,\
 zsh,curl,ca-certificates,man-db,git,pciutils,usbutils,iputils-ping,less,nano,\
 kmod"
+debian_version_default=jessie
+image_size_default=30G
+kerndev_path_default=$HOME/images
+linux_dev_path_default=$HOME/linux
+qemu_cores_default=4
+qemu_ram_default=4G
 
 # Configuration options with default values:-
 
 # DEBIAN_ options are used for the aarch64 build as Arch doesn't yet have an
 # aarch64 build :(
-DEBIAN_MIRROR=${DEBIAN_MIRROR:-http://mirror.positive-internet.com/debian}
-DEBIAN_PACKAGES=${DEBIAN_PACKAGES:-$default_debian_packages}
-DEBIAN_VERSION=${DEBIAN_VERSION:-jessie}
+DEBIAN_MIRROR=${DEBIAN_MIRROR:-$debian_mirror_default}
+DEBIAN_PACKAGES=${DEBIAN_PACKAGES:-$debian_packages_default}
+DEBIAN_VERSION=${DEBIAN_VERSION:-$debian_version_default}
 # Size of image created by kerndev-create.
-IMAGE_SIZE=${IMAGE_SIZE:-30G}
+IMAGE_SIZE=${IMAGE_SIZE:-$image_size_default}
 # Location to store image files in.
-KERNDEV_PATH=${KERNDEV_PATH:-$HOME/images}
+KERNDEV_PATH=${KERNDEV_PATH:-$kerndev_path_default}
 # Location containing the kernel source code.
-LINUX_DEV_PATH=${LINUX_DEV_PATH:-$HOME/linux}
+LINUX_DEV_PATH=${LINUX_DEV_PATH:-$linux_dev_path_default}
 # QEMU settings.
-QEMU_CORES=${QEMU_CORES:-4}
-QEMU_RAM=${QEMU_RAM:-4G}
+QEMU_CORES=${QEMU_CORES:-$qemu_cores_default}
+QEMU_RAM=${QEMU_RAM:-$qemu_ram_default}
 
 # Configuration options which default to being unset, included here for
 # documentation:-
