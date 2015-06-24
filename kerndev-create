@@ -79,12 +79,21 @@ if [ -z "$USE_EXISTING_IMAGE" ] && [ ! -z "$ENABLE_GCOV" ]; then
 	# Create 'cov' tool to check coverage for a specific file in the kernel tree.
 	cov_path=/mnt/usr/bin/cov
 
-	cat >$cov_path <<EOF
+	cat >$cov_path <<-EOF
 #!/bin/bash
 
 [ -z "\$1" ] && echo "usage: \$(basename \$0) [relative path to source file]" >&2 && exit 1
 
-sudo gcov -o /sys/kernel/debug/gcov/$LINUX_DEV_PATH/\$(dirname \$1) /home/$SUDO_USER/linux/\$1
+# ref: https://goo.gl/rnd6yo
+args=\${@:1:-1}
+f=\${@: -1}
+
+local_linux=/home/$SUDO_USER/linux/
+
+pushd \$local_linux >/dev/null
+sudo gcov \$args -o /sys/kernel/debug/gcov/$LINUX_DEV_PATH/\$(dirname \$f) \$local_linux/\$f
+sudo chown $SUDO_USER *.gcov
+popd >/dev/null
 EOF
 	chmod +x $cov_path
 	give_back $cov_path
