@@ -13,4 +13,5 @@ for file in $args; do
 		fatal "Can't find $file."
 done
 
-$LINUX_DEV_PATH/scripts/checkpatch.pl $check_opts $args
+# Perl sometimes outputs spurious error messages on stderr.
+$LINUX_DEV_PATH/scripts/checkpatch.pl $check_opts $args 2>/dev/null
