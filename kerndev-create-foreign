@@ -3,24 +3,39 @@ set -e; set -o pipefail; source kerndev-shared.sh
 
 # TODO: Duplicates kerndev-create, lots of copy-pasta, de-duplicate!!
 
-binfmt_path=/proc/sys/fs/binfmt_misc
-binfmt_aarch64=":aarch64:M::\x7fELF\x02\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\
+[ -z "$1" ] && fatal missing arch.
+
+target_arch=$1
+shift
+
+case $target_arch in
+	"aarch64")
+		binfmt_sig=":aarch64:M::\x7fELF\x02\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\
 \x00\x02\x00\xb7:\xff\xff\xff\xff\xff\xff\xff\x00\xff\xff\xff\xff\xff\xff\xff\
 \xff\xfe\xff\xff:/usr/bin/qemu-aarch64-static:"
-rootfs=rootfs_aarch64.img
+	;;
+	 *)
+		fatal Unknown arch $target_arch.
+	 ;;
+esac
+
+rootfs="rootfs_$target_arch.img"
+
+binfmt_path="/proc/sys/fs/binfmt_misc"
+
 chroot_path="/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin"
 
 # Functions.
 
 function cleanup()
 {
-	[ -f $binfmt_path/aarch64 ] && echo -1 > $binfmt_path/aarch64
-	rm -f /mnt/usr/bin/qemu-aarch64-static
+	[ -f $binfmt_path/$target_arch ] && echo -1 > $binfmt_path/$target_arch
+	rm -f /mnt/usr/bin/qemu-$target_arch-static
 	unmount
 }
 
 # Sanity checks.
-check_exists debootstrap qemu-system-aarch64 qemu-aarch64-static
+check_exists debootstrap qemu-system-$target_arch qemu-$target_arch-static
 [ ! -d $binfmt_path ] && fatal "binfmt not available."
 
 [ ! -z $USE_EXISTING_IMAGE ] && [ ! -f $KERNDEV_PATH/$rootfs ] && \
@@ -29,7 +44,7 @@ check_exists debootstrap qemu-system-aarch64 qemu-aarch64-static
 # So many commands need sudo, so just force the issue.
 elevate $@
 
-chroot_script_path=$(which kerndev-create-aarch64.chroot.sh)
+chroot_script_path=$(which kerndev-create-$target_arch.chroot.sh)
 
 unmount
 
@@ -56,8 +71,8 @@ if [ -z "$USE_EXISTING_IMAGE" ]; then
 fi
 
 echo Enabling binfmt for chroot...
-cp $(which qemu-aarch64-static) /mnt/usr/bin/
-echo $binfmt_aarch64 > $binfmt_path/register
+cp $(which qemu-$target_arch-static) /mnt/usr/bin/
+echo "$binfmt_sig" > $binfmt_path/register
 
 if [ -z "$USE_EXISTING_IMAGE" ]; then
 	echo Entering chroot, downloading and installing second stage rootfs into image...
@@ -92,10 +107,10 @@ fi
 echo Building linux...
 # Install separately so we can update user on progress separately + not write
 # root owned files!
-NO_DONE=y DONT_INSTALL=y sudo -E -u $SUDO_USER kerndev-build aarch64
+NO_DONE=y DONT_INSTALL=y sudo -E -u $SUDO_USER kerndev-build $target_arch
 
 echo Installing modules into image and generating initrd...
-NO_DONE=y source kerndev-install aarch64
+NO_DONE=y source kerndev-install $target_arch
 
 pop
 

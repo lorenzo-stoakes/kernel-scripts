@@ -6,8 +6,7 @@ target_arch=${1:-"x86_64"}
 
 case $target_arch in
 	"aarch64")
-		shift
-		exec kerndev-create-aarch64 $@
+		exec kerndev-create-foreign $target_arch $@
 		exit $?
 		;;
 	"x86_64")
