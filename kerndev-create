@@ -14,7 +14,7 @@ case $target_arch in
 		;;
 	 *)
 		 fatal Unknown arch $1.
-	 ;;
+		 ;;
 esac
 
 # Sanity checks.
