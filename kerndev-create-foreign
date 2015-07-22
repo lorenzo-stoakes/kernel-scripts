@@ -19,8 +19,7 @@ case $target_arch in
 	 ;;
 esac
 
-rootfs="rootfs_$target_arch.img"
-
+rootfs="rootfs_${target_arch}.img"
 binfmt_path="/proc/sys/fs/binfmt_misc"
 
 chroot_path="/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin"

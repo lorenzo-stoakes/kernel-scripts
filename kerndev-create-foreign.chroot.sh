@@ -54,15 +54,13 @@ export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
 # We want to use the network :)
 systemctl -q enable dhcpcd 2>/dev/null
 
-
-# networkd doesn't seem to work :(
-#cat > /etc/systemd/network/eth.network <<EOF
-#[Match]
-#Name=eth0
-#[Network]
-#DHCP=yes
-#EOF
-#systemctl -q enable systemd-networkd 2>/dev/null
+cat > /etc/systemd/network/eth.network <<EOF
+[Match]
+Name=eth0
+[Network]
+DHCP=yes
+EOF
+systemctl -q enable systemd-networkd 2>/dev/null
 
 # We assign Google DNS servers (outside this script), so fuck this hook.
 echo "nohook resolv.conf" >> /etc/dhcpcd.conf
