@@ -86,7 +86,7 @@ esac
 
 qemu=qemu-system-${target_arch}
 shared_opts="-nographic -m $QEMU_RAM -smp $QEMU_CORES -s"
-shared_append="rw root=/dev/vda"
+shared_append="root=/dev/vda rw earlyprintk=serial"
 
 kerndev-qemu-tap-helper.sh $SUDO_USER $tap_nic $br_nic $wan_nic up
 trap "kerndev-qemu-tap-helper.sh $SUDO_USER $tap_nic $br_nic $wan_nic down" EXIT
