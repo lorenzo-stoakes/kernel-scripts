@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e; set -o pipefail; source kerndev-shared.sh
 
+# NOTE: $cross_compile_prefix will vary depending on your cross-compiler setup.
+
 # If an argument is provided, it specifies a cross-compile target architecture.
 target_arch=${1:-"x86_64"}
 
@@ -11,13 +13,13 @@ target_arch=${1:-"x86_64"}
 [ $EUID = 0 ] && fatal "Don't run as root, causes file ownership pain"
 
 case $target_arch in
+arm)
+	linux_arch="arm"
+	cross_compile_prefix="arm-linux-gnueabihf-"
+	;;
 aarch64)
-	# Make sure we have cross-compilers. `gcc` check should suffice.
-	check_exists aarch64-linux-gnu-gcc
-
-	# For now, always force a rebuild.
-	REBUILD=y
-	make_opts="ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu-"
+	linux_arch="arm64"
+	cross_compile_prefix="aarch64-linux-gnu-"
 	;;
 "x86_64")
 	;;
@@ -25,6 +27,15 @@ aarch64)
 	fatal "unknown architecture: $target_arch"
 	;;
 esac
+
+if [ "$target_arch" != "x86_64" ]; then
+	# Make sure we have cross-compilers. `gcc` check should suffice.
+	check_exists ${cross_compile_prefix}gcc
+
+	# For now, always force a rebuild.
+	REBUILD=y
+	make_opts="ARCH=${linux_arch} CROSS_COMPILE=$cross_compile_prefix"
+fi
 
 # Ref: http://stackoverflow.com/a/6481016
 cores=$(grep -c ^processor /proc/cpuinfo)

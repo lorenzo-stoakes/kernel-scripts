@@ -31,9 +31,26 @@ elevate $@
 # We want access to the underlying user.
 [ -z "$SUDO_USER" ] && fatal Please run this using sudo!
 
-shared_net_opts="-net nic,model=virtio,macaddr=$mac"
-
 case $target_arch in
+arm)
+	qemu=qemu-system-arm
+
+	kernel_image_path=$LINUX_DEV_PATH/arch/arm/boot/Image
+	rootfs_image_path=$KERNDEV_PATH/rootfs_arm.img
+
+	arch_opts="-machine virt
+	 -cpu cortex-a15
+	 -drive if=none,file=$rootfs_image_path,id=vda,format=raw
+	 -device virtio-blk-pci,drive=vda"
+
+	arch_append="console=ttyS0"
+	arch_net_opts="-netdev tap,ifname=$tap_nic,script=no,downscript=no,id=tap
+		 -device virtio-net-pci,netdev=tap"
+
+	QEMU_CORES=1
+	QEMU_RAM=512M
+
+	;;
 aarch64)
 	qemu=qemu-system-aarch64
 
@@ -41,13 +58,14 @@ aarch64)
 	rootfs_image_path=$KERNDEV_PATH/rootfs_aarch64.img
 
 	arch_opts="-machine virt
-	-cpu cortex-a57
-	-machine type=virt,kernel_irqchip=on
-	-drive if=none,file=$rootfs_image_path,id=vda,format=raw
-	-device virtio-blk-device,drive=vda"
-	arch_net_opts="-netdev tap,ifname=$tap_nic,script=no,downscript=no,id=tap
-		 -device virtio-net-device,netdev=tap"
+	 -cpu cortex-a57
+	 -machine type=virt,kernel_irqchip=on
+	 -drive if=none,file=$rootfs_image_path,id=vda,format=raw
+	 -device virtio-blk-device,drive=vda"
 	arch_append="console=ttyAMA0"
+	arch_net_opts="-net nic,model=virtio,macaddr=$mac
+		 -netdev tap,ifname=$tap_nic,script=no,downscript=no,id=tap
+		 -device virtio-net-device,netdev=tap"
 
 	;;
 x86_64)
@@ -63,7 +81,8 @@ x86_64)
 	-boot once=c
 	-initrd $initrd_image_path"
 	arch_append="console=ttyS0"
-	arch_net_opts="-net tap,ifname=$tap_nic,script=no,downscript=no"
+	arch_net_opts="-net nic,model=virtio,macaddr=$mac
+	 -net tap,ifname=$tap_nic,script=no,downscript=no"
 
 	;;
 *)
@@ -71,11 +90,12 @@ x86_64)
 	;;
 esac
 
+qemu=qemu-system-${target_arch}
 shared_opts="-nographic -m $QEMU_RAM -smp $QEMU_CORES -s"
 shared_append="rw root=/dev/vda"
 
 kerndev-qemu-tap-helper.sh $SUDO_USER $tap_nic $br_nic $wan_nic up
 trap "kerndev-qemu-tap-helper.sh $SUDO_USER $tap_nic $br_nic $wan_nic down" EXIT
 
-$qemu $shared_opts $arch_opts $shared_net_opts $arch_net_opts $QEMU_CUSTOM_SETTINGS \
+$qemu $shared_opts $arch_opts $arch_net_opts $QEMU_CUSTOM_SETTINGS \
 	-kernel $kernel_image_path -append "$shared_append $arch_append"

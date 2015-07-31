@@ -5,8 +5,12 @@ set -e; set -o pipefail; source kerndev-shared.sh
 target_arch=${1:-"x86_64"}
 
 case $target_arch in
+	"arm")
+		exec kerndev-create-foreign arm $@
+		exit $?
+		;;
 	"aarch64")
-		exec kerndev-create-foreign $target_arch $@
+		exec kerndev-create-foreign aarch64 $@
 		exit $?
 		;;
 	"x86_64")
