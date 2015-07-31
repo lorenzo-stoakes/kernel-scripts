@@ -33,8 +33,6 @@ elevate $@
 
 case $target_arch in
 arm)
-	qemu=qemu-system-arm
-
 	kernel_image_path=$LINUX_DEV_PATH/arch/arm/boot/Image
 	rootfs_image_path=$KERNDEV_PATH/rootfs_arm.img
 
@@ -52,8 +50,6 @@ arm)
 
 	;;
 aarch64)
-	qemu=qemu-system-aarch64
-
 	kernel_image_path=$LINUX_DEV_PATH/arch/arm64/boot/Image
 	rootfs_image_path=$KERNDEV_PATH/rootfs_aarch64.img
 
@@ -69,8 +65,6 @@ aarch64)
 
 	;;
 x86_64)
-	qemu=qemu-system-x86_64
-
 	kernel_image_path=$LINUX_DEV_PATH/arch/x86/boot/bzImage
 	initrd_image_path=$KERNDEV_PATH/init.img
 	rootfs_image_path=$KERNDEV_PATH/rootfs.img
