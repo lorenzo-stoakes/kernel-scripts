@@ -5,9 +5,13 @@ set -e; set -o pipefail; source kerndev-shared.sh
 target_arch=${1:-"x86_64"}
 
 case $target_arch in
+arm)
+	linux_arch="arm"
+	cross_compile_prefix="arm-linux-gnueabihf-"
+	;;
 aarch64)
-	make_opts="ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu-"
-	rootfs=rootfs_aarch64.img
+	linux_arch="arm64"
+	cross_compile_prefix="aarch64-linux-gnu-"
 	;;
 x86_64)
 	rootfs=rootfs.img
@@ -23,6 +27,11 @@ x86_64)
 	fatal "unknown architecture: $target_arch"
 	;;
 esac
+
+if [ "$target_arch" != "x86_64" ]; then
+	rootfs=rootfs_${target_arch}.img
+	make_opts="ARCH=${linux_arch} CROSS_COMPILE=$cross_compile_prefix"
+fi
 
 # Sanity checks.
 
@@ -42,8 +51,8 @@ echo Installing headers and modules...
 mak headers_install INSTALL_HDR_PATH=/mnt/usr/
 mak modules_install INSTALL_MOD_PATH=/mnt/
 
-# No initrd for aarch64, yet.
-if [ "$target_arch" != "aarch64" ]; then
+# No initrd for non-x86_64, yet.
+if [ "$target_arch" = "x86_64" ]; then
 	echo Installing initrd image...
 	mkinitcpio -r /mnt -k $kernel_image_path -g $initrd_image_path \
 	    &>/dev/null
