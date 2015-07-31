@@ -6,9 +6,8 @@ target_arch=${1:-"x86_64"}
 
 case $target_arch in
 arm)
-	linux_arch="arm"
-	cross_compile_prefix="arm-linux-gnueabihf-"
-	;;
+	# Use aarch64 + backwards compatibility.
+	;&
 aarch64)
 	linux_arch="arm64"
 	cross_compile_prefix="aarch64-linux-gnu-"

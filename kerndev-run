@@ -31,27 +31,17 @@ elevate $@
 # We want access to the underlying user.
 [ -z "$SUDO_USER" ] && fatal Please run this using sudo!
 
+qemu=qemu-system-${target_arch}
+
 case $target_arch in
 arm)
-	kernel_image_path=$LINUX_DEV_PATH/arch/arm/boot/Image
+	# Use aarch64 + backwards compatibility.
+	qemu=qemu-system-aarch64
 	rootfs_image_path=$KERNDEV_PATH/rootfs_arm.img
-
-	arch_opts="-machine virt
-	 -cpu cortex-a15
-	 -drive if=none,file=$rootfs_image_path,id=vda,format=raw
-	 -device virtio-blk-pci,drive=vda"
-
-	arch_append="console=ttyS0"
-	arch_net_opts="-netdev tap,ifname=$tap_nic,script=no,downscript=no,id=tap
-		 -device virtio-net-pci,netdev=tap"
-
-	QEMU_CORES=1
-	QEMU_RAM=512M
-
-	;;
+	;&
 aarch64)
 	kernel_image_path=$LINUX_DEV_PATH/arch/arm64/boot/Image
-	rootfs_image_path=$KERNDEV_PATH/rootfs_aarch64.img
+	rootfs_image_path=${rootfs_image_path:-$KERNDEV_PATH/rootfs_aarch64.img}
 
 	arch_opts="-machine virt
 	 -cpu cortex-a57
@@ -84,7 +74,6 @@ x86_64)
 	;;
 esac
 
-qemu=qemu-system-${target_arch}
 shared_opts="-nographic -m $QEMU_RAM -smp $QEMU_CORES -s"
 shared_append="root=/dev/vda rw earlyprintk=serial"
 
