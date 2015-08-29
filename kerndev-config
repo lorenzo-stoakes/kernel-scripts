@@ -1,31 +1,6 @@
 #!/bin/bash
 set -e; set -o pipefail; source kerndev-shared.sh
 
-# Functions.
-
-# Configure kernel setting to $1 for settings in $@...
-function config()
-{
-	choice=$1
-	shift
-
-	for setting in $@; do
-		scripts/config --$choice $setting
-	done
-}
-
-# Enable kernal settings $@...
-function kenable()
-{
-	config enable $@
-}
-
-# Disable kernal settings $@...
-function kdisable()
-{
-	config disable $@
-}
-
 push_linux
 
 # Show extra version info.

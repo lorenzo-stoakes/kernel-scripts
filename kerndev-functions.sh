@@ -111,3 +111,37 @@ function say_done()
 {
 	[ -z "$NO_DONE" ] && echo Done! || true
 }
+
+
+# Configure kernel setting to $1 for settings in $@...
+function config()
+{
+	choice=$1
+	shift
+
+	case $choice in
+	enable)
+		;&
+	disable)
+		for setting in $@; do
+			scripts/config --$choice $setting
+		done
+		;;
+	*)
+		scripts/config --$choice $@
+		;;
+
+	esac
+}
+
+# Enable kernal settings $@...
+function kenable()
+{
+	config enable $@
+}
+
+# Disable kernal settings $@...
+function kdisable()
+{
+	config disable $@
+}
