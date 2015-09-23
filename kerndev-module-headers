@@ -1,0 +1,97 @@
+#!/bin/bash
+set -e; set -o pipefail; source kerndev-shared.sh
+
+# Heavily based on PKGBUILD from
+# https://www.archlinux.org/packages/core/x86_64/linux/
+
+function usage()
+{
+	echo "usage: $(basename $0) [target dir] <karch?=x86> <make directives>">&2
+	exit 1
+}
+
+# See http://stackoverflow.com/a/4774063
+function get_full_path()
+{
+	echo "$( cd "$1" ; pwd -P )"
+}
+
+([ -z "$1" ] || ([ -f "$1" ] && [ ! -d "$1" ])) && usage
+
+# Generate if doesn't exist.
+install -dm755 $1
+
+target_dir=$(get_full_path $1)
+karch=${2:-x86}
+if [ "$#" -gt 2 ]; then
+    shift 2
+    make_opts="$@"
+fi
+
+karch_dir="arch/$karch"
+target_karch_dir="$target_dir/$karch_dir"
+
+extra_header_dirs="drivers/md net/mac80211 drivers/media/dvb-core include/config/dvb \
+drivers/media/dvb-frontends drivers/media/usb/dvb-usb drivers/media/tuners"
+
+push_linux
+trap pop EXIT
+
+[ ! -f .config ] && fatal "Missing kernel configuration."
+[ ! -f Module.symvers ] && fatal "Missing Module.symvers, build kernel to generate."
+[ ! -d "$karch_dir" ] && fatal "Unrecognised karch: $karch"
+
+echo Running modules_prepare...
+make $make_opts modules_prepare >/dev/null
+
+echo Copying required files...
+
+for f in .config Makefile kernel/Makefile Module.symvers Documentation/DocBook/Makefile; do
+	install -D -m644 "$f" "$target_dir/$f"
+done
+
+# Arch Linux copies only specific directories, however the difference is 31M
+# vs. 37M (~168k compressed) so for future-proofing I think it's not much more
+# of a cost to just copy everything.
+find include -mindepth 1 -maxdepth 1 -type d | \
+    xargs -I {} cp -a "{}" "$target_dir/include"
+
+for d in include $extra_header_dirs; do
+	[ -d "$d" ] && mkdir -p "$target_dir/$d"
+done
+
+mkdir -p "$target_karch_dir"
+cp -a "$karch_dir/include" "$target_karch_dir"
+for h in $(find $karch_dir -iname '*.h'); do
+	mkdir -p "$target_dir/$(dirname $h)"
+	cp $h "$target_dir/$h"
+done
+
+cp -a scripts "$target_dir/scripts"
+# Don't strip binaries as only makes 200kb difference...
+
+mkdir -p "$target_karch_dir/kernel"
+cp "$karch_dir/Makefile" "$target_karch_dir"
+
+# May as well always copy these if available.
+for f in Makefile_32.cpu kernel/asm-offsets.s; do
+	p="$karch_dir/$f"
+	[ -f $p ] && cp "$p" "$target_karch_dir/$f"
+done
+
+# Copy in extra headers. Directories already created above.
+for d in $extra_header_dirs; do
+	[ -d "$d" ] && cp $d/*.h "$target_dir/$d"
+done
+
+# Specific required files.
+mkdir -p "$target_dir/drivers/media/i2c/"
+cp drivers/media/i2c/msp3400-driver.h "$target_dir/drivers/media/i2c/"
+
+# Copy in Kconfig files.
+for f in $(find . -name "Kconfig*"); do
+	mkdir -p "$target_dir/$(dirname $f)"
+	cp $f "$target_dir/$f"
+done
+
+say_done

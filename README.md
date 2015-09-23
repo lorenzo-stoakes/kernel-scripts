@@ -51,6 +51,8 @@ user-runnable, but are instead ran from other scripts.
 * `kerndev-rebuild` - Same as `kerndev-build` but runs `make mrproper` first.
 * `kerndev-install` - Installs header and module files into the dev env
   image. This is invoked by `kerndev-build` unless explicitly disabled.
+* `kerndev-module-headers` - Generates a stripped version of the kernel source
+  for building external modules.
 
 ### Running
 
