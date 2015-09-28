@@ -56,14 +56,12 @@ aarch64)
 	;;
 x86_64)
 	kernel_image_path=$LINUX_DEV_PATH/arch/x86/boot/bzImage
-	initrd_image_path=$KERNDEV_PATH/init.img
 	rootfs_image_path=$KERNDEV_PATH/rootfs.img
 
 	arch_opts="-enable-kvm
 	-cpu host
 	-drive file=$rootfs_image_path,if=virtio,cache=none,format=raw
-	-boot once=c
-	-initrd $initrd_image_path"
+	-boot once=c"
 	arch_append="console=ttyS0"
 	arch_net_opts="-net nic,model=virtio,macaddr=$mac
 	 -net tap,ifname=$tap_nic,script=no,downscript=no"
