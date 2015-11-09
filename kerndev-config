@@ -27,6 +27,15 @@ kdisable debug_info_reduced debug_rodata
 # Gain access to /proc/config.gz.
 kenable ikconfig ikconfig_proc
 
+# Optionally enable flags for docker support.
+[ ! -z "$ENABLE_DOCKER_SUPPORT" ] && \
+    kenable netfilter_advanced dm_thin_provisioning bridge bridge_netfilter \
+	    devpts_multiple_instances cgroup_device memcg macvlan veth \
+	    nf_nat_ipv4 nf_nat netfilter_xt_match_{conntrack,addrtype} \
+	    blk_cgroup blk_dev_throttling cgroup_perf cgroup_hugetlb \
+	    net_cls_cgroup cfs_bandwidth rt_group_sched netprio_cgroup \
+	    cgroup_net_prio btrfs_fs
+
 # Optionally, we are interested in code coverage.
 [ ! -z "$ENABLE_GCOV" ] && \
 	kenable debug_fs gcov_kernel gcov_format_autodetect gcov_profile_all
