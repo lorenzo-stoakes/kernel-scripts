@@ -55,7 +55,7 @@ echo tux > /etc/hostname
 
 # Now get the packages we want.
 echo Installing packages...
-pacman -Sy --noconfirm yaourt screen strace zsh lsof emacs-nox openssh &>/dev/null
+pacman -Sy --noconfirm btrfs-progs yaourt screen strace zsh lsof emacs-nox openssh &>/dev/null
 # We don't need the linux package, we link to the kernel via a qemu switch.
 pacman -R --noconfirm linux &>/dev/null || true
 
