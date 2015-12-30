@@ -43,11 +43,6 @@ push_linux
 
 echo Configuring kernel...
 
-if [ ! -z "$REBUILD" ] || [ ! -f .config ]; then
-	mak mrproper
-	mak defconfig
-fi
-
 source kerndev-config
 # Set any new options implied by kerndev-config to default.
 mak olddefconfig

@@ -3,6 +3,10 @@ set -e; set -o pipefail; source kerndev-shared.sh
 
 push_linux
 
+if [ ! -z "$REBUILD" ] || [ ! -f .config ]; then
+	mak mrproper
+	mak defconfig
+fi
 # Show extra version info.
 kenable local_version_auto
 
