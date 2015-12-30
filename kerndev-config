@@ -34,6 +34,10 @@ kdisable debug_info_reduced debug_rodata
 # Gain access to /proc/config.gz.
 kenable ikconfig ikconfig_proc
 
+# Avoid legacy hotplug.
+# Taken with thanks from http://unix.stackexchange.com/a/116888.
+scripts/config --set-str uevent_helper_path ""
+
 # Optionally enable flags for docker support.
 [ ! -z "$ENABLE_DOCKER_SUPPORT" ] && \
     kenable netfilter_advanced dm_thin_provisioning bridge bridge_netfilter \
