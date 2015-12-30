@@ -13,6 +13,9 @@ kenable local_version_auto
 # Required for systemd.
 kenable fhandle
 
+# We like devtmpfs.
+kenable devtmpfs
+
 # Disable unneeded wifi interface which spawns spurious debug output.
 kdisable cfg80211
 
