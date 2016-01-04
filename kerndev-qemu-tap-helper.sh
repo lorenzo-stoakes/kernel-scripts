@@ -4,7 +4,21 @@ set -e; set -o pipefail
 # Author: Jakub Klinkovský (Lahwaacz)
 # https://github.com/lahwaacz
 
+# Modified by Lorenzo Stoakes, with gratitude to Jakub's fine work!
+
 ########## Functions ##########
+
+# Uncomment the following line to get debug output.
+#DEBUG_OUTPUT=1
+function say()
+{
+	[ ! -z "$DEBUG_OUTPUT" ] && echo $@ || true
+}
+
+function error()
+{
+	echo $@ >&2
+}
 
 ## Check if a string represents a network interface
 # $1: potential interface name
@@ -18,7 +32,7 @@ function is_interface()
 function create_tap()
 {
 	if ! is_interface "$1"; then
-		echo "Creating TAP interface '$1'"
+		say "Creating TAP interface '$1'"
 		ip tuntap add "$1" mode tap user "$username"
 		ip link set dev "$1" up
 	fi
@@ -28,7 +42,7 @@ function create_tap()
 # $1: name of the interface to delete
 function del_tap()
 {
-	echo "Deleting TAP interface '$1'"
+	say "Deleting TAP interface '$1'"
 	ip link set dev "$1" down
 	ip tuntap del "$1" mode tap
 }
@@ -46,17 +60,17 @@ function create_br()
 {
 	if is_interface "$1"; then
 		if [[ ! -d "/sys/class/net/$1/brif" ]]; then
-			echo "Interface '$1' already exists and is not a bridge"
+			error "Interface '$1' already exists and is not a bridge"
 			exit 1
 		fi
 	else
-		echo "Creating bridge interface '$1'"
+		say "Creating bridge interface '$1'"
 	brctl addbr "$1"
 		#ip link add name "$1" type bridge
 		ip link set dev "$1" up
 
 		# Xyne's excellent script to launch NAT
-		echo "Starting NAT"
+		say "Starting NAT"
 		kerndev-nat-launch.sh "$wan_nic" "$1" up
 	fi
 }
@@ -67,10 +81,10 @@ function del_br()
 {
 	if bridge_is_empty "$1"; then
 		# Xyne's excellent script to kill NAT
-		echo "Stopping NAT"
+		say "Stopping NAT"
 		kerndev-nat-launch.sh "$wan_nic" "$1" down
 
-		echo "Deleting bridge interface '$1'"
+		say "Deleting bridge interface '$1'"
 		ip link set dev "$1" down
 		ip link delete "$1" type bridge
 	fi
@@ -81,7 +95,7 @@ function del_br()
 # $2: name of the interface to add
 function br_add_iface()
 {
-	echo "Adding interface '$2' to bridge '$1'"
+	say "Adding interface '$2' to bridge '$1'"
 	ip link set dev "$2" promisc on up
 	ip addr flush dev "$2" scope host #&>/dev/null
 	ip addr flush dev "$2" scope site #&>/dev/null
@@ -98,7 +112,7 @@ function br_add_iface()
 # $2: name of the interface to remove
 function br_rm_iface()
 {
-	echo "Removing interface '$2' from bridge '$1'"
+	say "Removing interface '$2' from bridge '$1'"
 	ip link set "$2" promisc off down
 	ip link set dev "$2" nomaster
 }
@@ -107,13 +121,13 @@ function br_rm_iface()
 
 function print_qemu_tap_helper_usage()
 {
-	echo "usage: $0 <username> <TAP interface> <bridge interface> <WAN interface> <up|down>"
-	echo "  <TAP interface> and <bridge interface> will be created,"
-	echo "  NAT from <WAN interface> to <bridge interface> will be set up"
+	error "usage: $0 <username> <TAP interface> <bridge interface> <WAN interface> <up|down>"
+	error "  <TAP interface> and <bridge interface> will be created,"
+	error "  NAT from <WAN interface> to <bridge interface> will be set up"
 }
 
 if [[ $EUID -ne 0 ]]; then
-	echo "This script must be run as root." >&2
+	error "This script must be run as root."
 	exit 1
 fi
 

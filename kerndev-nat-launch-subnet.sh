@@ -186,7 +186,7 @@ function launch_subnet()
 			# Kill the DHCP server.
 			if [[ -f $dnsmasq_pid ]]
 			then
-				kill $(cat "$dnsmasq_pid") && rm "$dnsmasq_pid" && echo "killed server"
+				kill $(cat "$dnsmasq_pid") && rm "$dnsmasq_pid"
 			fi
 
 			if [[ ! -z $pre_down ]]
