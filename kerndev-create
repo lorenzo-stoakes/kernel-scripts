@@ -79,6 +79,8 @@ EOF
 echo ...chroot-ed script complete!
 
 if [ -z "$USE_EXISTING_IMAGE" ] && [ ! -z "$ENABLE_GCOV" ]; then
+    echo Generating gcov script...
+
 	# Create 'cov' tool to check coverage for a specific file in the kernel tree.
 	cov_path=/mnt/usr/bin/cov
 
