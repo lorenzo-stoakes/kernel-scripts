@@ -43,7 +43,7 @@ DONT_INSTALL=${DONT_INSTALL:-}
 # If set, enable gcov configuration settings, and copy kernel source into image.
 ENABLE_GCOV=${ENABLE_GCOV:-}
 # If set, enable kernel support for docker.
-ENABLE_GCOV=${ENABLE_DOCKER_SUPPORT:-}
+ENABLE_DOCKER_SUPPORT=${ENABLE_DOCKER_SUPPORT:-}
 # If set, do not say 'Done!' when done :)
 NO_DONE=${NO_DONE:-}
 # Custom qemu settings, e.g. a USB device pass-through like
