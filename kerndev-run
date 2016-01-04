@@ -72,7 +72,8 @@ x86_64)
 	;;
 esac
 
-shared_opts="-nographic -m $QEMU_RAM -smp $QEMU_CORES -s"
+# '-echr 0x02' moves escape key to C-b to avoid C-a getting nerfed.
+shared_opts="-nographic -m $QEMU_RAM -smp $QEMU_CORES -s -echr 0x02"
 shared_append="root=/dev/vda rw loglevel=2"
 
 kerndev-qemu-tap-helper.sh $SUDO_USER $tap_nic $br_nic $wan_nic up
