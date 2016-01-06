@@ -58,8 +58,17 @@ user-runnable, but are instead ran from other scripts.
 
 * `kerndev-run` - Runs the kernel development environment with virtio
   networking.
-* `kerndev-debug` - Connects `gdb` to a running dev env. Debugging config options
-  are enabled by `kerndev-build`.
+* `kerndev-debug` - Connects `gdb` to a running dev env. Debugging config
+  options are enabled by `kerndev-build` by default. When you run
+  `kerndev-debug` it runs `gdb` which automatically connects to the qemu
+  instance.
+
+__IMPORTANT:__ `gdb` has a big issue with the CPU changing architecture on
+  startup, so you ought to run `kerndev-run` _before_ `kerndev-debug`. If you
+  encounter `Remote 'g' packet reply is too long` errors you have triggered this
+  issue and specifying arch afterwards doesn't seem to fix anything. If you need
+  to debug early boot code, you'll need to investigate how to work around this
+  issue :(
 
 ### Code
 
