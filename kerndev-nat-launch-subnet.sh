@@ -151,13 +151,13 @@ function launch_subnet()
 			"$iptables" -A FORWARD -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
 
 			# Bring down subnet_nic, configure it and bring it up again.
-			if [[ ! -z $pre_up ]]
+			if [[ -n $pre_up ]]
 			then
 				ip link set dev "$subnet_nic" down
 				"$pre_up"
 			fi
 			ip link set dev "$subnet_nic" up
-			if [[ ! -z $post_up ]]
+			if [[ -n $post_up ]]
 			then
 				"$post_up"
 			fi
@@ -189,13 +189,13 @@ function launch_subnet()
 				kill $(cat "$dnsmasq_pid") && rm "$dnsmasq_pid"
 			fi
 
-			if [[ ! -z $pre_down ]]
+			if [[ -n $pre_down ]]
 			then
 				"$pre_down"
 			fi
 			ip addr delete "$server_ip" dev "$subnet_nic"
 			ip link set dev "$subnet_nic" down
-			if [[ ! -z $post_down ]]
+			if [[ -n $post_down ]]
 			then
 				"$post_down"
 			fi
@@ -211,7 +211,7 @@ function launch_subnet()
 			"$iptables" -D INPUT -i "$subnet_nic" -s "$subnet_ip" -p tcp --dport 53 -j ACCEPT
 
 
-			if [[ ! -z $ip_forward ]]
+			if [[ -n $ip_forward ]]
 			then
 				if [[ $ip_forward != $(cat /proc/sys/net/ipv4/ip_forward) ]]
 				then

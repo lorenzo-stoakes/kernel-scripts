@@ -3,7 +3,7 @@ set -e; set -o pipefail; source kerndev-shared.sh
 
 push_linux
 
-if [ ! -z "$REBUILD" ] || [ ! -f .config ]; then
+if [ -n "$REBUILD" ] || [ ! -f .config ]; then
 	mak mrproper
 	mak defconfig
 fi
@@ -39,7 +39,7 @@ kenable ikconfig ikconfig_proc
 scripts/config --set-str uevent_helper_path ""
 
 # Optionally enable flags for docker support.
-[ ! -z "$ENABLE_DOCKER_SUPPORT" ] && \
+[ -n "$ENABLE_DOCKER_SUPPORT" ] && \
     kenable netfilter_advanced dm_thin_provisioning bridge bridge_netfilter \
 	    devpts_multiple_instances cgroup_device memcg macvlan veth \
 	    nf_nat_ipv4 nf_nat netfilter_xt_match_{conntrack,addrtype} \
@@ -48,7 +48,7 @@ scripts/config --set-str uevent_helper_path ""
 	    cgroup_net_prio btrfs_fs
 
 # Optionally, we are interested in code coverage.
-[ ! -z "$ENABLE_GCOV" ] && \
+[ -n "$ENABLE_GCOV" ] && \
 	kenable debug_fs gcov_kernel gcov_format_autodetect gcov_profile_all
 
 pop

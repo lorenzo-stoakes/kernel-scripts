@@ -16,7 +16,7 @@ function enterdir()
 	[ "$prevref" == "HEAD" ] && prevref=$(git rev-parse HEAD)
 
 	changed=$(git status --porcelain)
-	if [ ! -z "$changed" ]; then
+	if [ -n "$changed" ]; then
 		git stash -q --include-untracked
 		stashed=y
 	fi
@@ -27,7 +27,7 @@ function exitdir()
 {
 	git checkout -q $prevref
 
-	if [ ! -z "$stashed" ]; then
+	if [ -n "$stashed" ]; then
 		git stash pop -q >/dev/null
 		unset stashed
 	fi

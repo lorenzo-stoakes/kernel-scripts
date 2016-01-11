@@ -27,7 +27,7 @@ esac
 check_exists kerndev-create.chroot.sh kerndev-build kerndev-install pacstrap \
 	    truncate mkfs.ext4 arch-chroot
 
-[ ! -z $USE_EXISTING_IMAGE ] && [ ! -f $KERNDEV_PATH/rootfs.img ] && \
+[ -n $USE_EXISTING_IMAGE ] && [ ! -f $KERNDEV_PATH/rootfs.img ] && \
 	fatal "can't find existing rootfs image"
 
 chroot_script_path=$(which kerndev-create.chroot.sh)
@@ -78,7 +78,7 @@ EOF
 
 echo ...chroot-ed script complete!
 
-if [ -z "$USE_EXISTING_IMAGE" ] && [ ! -z "$ENABLE_GCOV" ]; then
+if [ -z "$USE_EXISTING_IMAGE" ] && [ -n "$ENABLE_GCOV" ]; then
     echo Generating gcov script...
 
 	# Create 'cov' tool to check coverage for a specific file in the kernel tree.
@@ -106,7 +106,7 @@ if [ -z "$USE_EXISTING_IMAGE" ] && [ ! -z "$ENABLE_GCOV" ]; then
 	pop
 fi
 
-if [ ! -z "$ACCESS_CHROOT" ]; then
+if [ -n "$ACCESS_CHROOT" ]; then
 	echo Entering chroot shell...
 	arch-chroot /mnt
 	echo ...chroot shell done!

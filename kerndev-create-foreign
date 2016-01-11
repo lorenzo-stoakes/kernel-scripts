@@ -43,7 +43,7 @@ function cleanup()
 check_exists debootstrap qemu-system-$target_arch qemu-$target_arch-static
 [ ! -d $binfmt_path ] && fatal "binfmt not available."
 
-[ ! -z $USE_EXISTING_IMAGE ] && [ ! -f $KERNDEV_PATH/$rootfs ] && \
+[ -n $USE_EXISTING_IMAGE ] && [ ! -f $KERNDEV_PATH/$rootfs ] && \
 	fatal "can't find existing rootfs image"
 
 # So many commands need sudo, so just force the issue.
@@ -103,7 +103,7 @@ nameserver 8.8.8.8
 nameserver 8.8.4.4
 EOF
 
-if [ ! -z "$ACCESS_CHROOT" ]; then
+if [ -n "$ACCESS_CHROOT" ]; then
 	echo Entering chroot shell...
 	arch-chroot /mnt env -i TERM=ansi PATH=$chroot_path /bin/bash
 	echo ...chroot shell done!
