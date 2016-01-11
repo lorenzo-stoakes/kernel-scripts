@@ -9,7 +9,7 @@ check_opts="-f -q --show-types --no-summary"
 
 # Ensure the files exist, if not, die.
 for file in $args; do
-	(! is_opt $file) && [ ! -f $file ] && \
+	(! is_opt $file) && [[ ! -f $file ]] && \
 		fatal "Can't find $file."
 done
 

@@ -13,10 +13,10 @@ function enterdir()
 	prevref=$(git rev-parse --abbrev-ref=strict HEAD)
 	# If this is 'HEAD', we can't find a matching branch so just use the
 	# commit hash instead.
-	[ "$prevref" == "HEAD" ] && prevref=$(git rev-parse HEAD)
+	[[ "$prevref" == "HEAD" ]] && prevref=$(git rev-parse HEAD)
 
 	changed=$(git status --porcelain)
-	if [ -n "$changed" ]; then
+	if [[ -n "$changed" ]]; then
 		git stash -q --include-untracked
 		stashed=y
 	fi
@@ -27,7 +27,7 @@ function exitdir()
 {
 	git checkout -q $prevref
 
-	if [ -n "$stashed" ]; then
+	if [[ -n "$stashed" ]]; then
 		git stash pop -q >/dev/null
 		unset stashed
 	fi

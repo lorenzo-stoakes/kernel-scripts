@@ -16,9 +16,9 @@ x86_64)
 	rootfs=rootfs.img
 	kernel_image_path=$LINUX_DEV_PATH/arch/x86/boot/bzImage
 
-	[ ! -f $LINUX_DEV_PATH/REPORTING-BUGS ] && \
+	[[ ! -f $LINUX_DEV_PATH/REPORTING-BUGS ]] && \
 		fatal "doesn't look like a linux dev path: $LINUX_DEV_PATH"
-	[ ! -f $kernel_image_path ] && \
+	[[ ! -f $kernel_image_path ]] && \
 		fatal "can't find kernel image at $kernel_image_path"
 	;;
 *)
@@ -26,7 +26,7 @@ x86_64)
 	;;
 esac
 
-if [ "$target_arch" != "x86_64" ]; then
+if [[ "$target_arch" != "x86_64" ]]; then
 	rootfs=rootfs_${target_arch}.img
 	make_opts="ARCH=${linux_arch} CROSS_COMPILE=$cross_compile_prefix"
 fi
@@ -34,7 +34,7 @@ fi
 # Sanity checks.
 
 rootfs_image_path=$KERNDEV_PATH/$rootfs
-[ ! -f $rootfs_image_path ] && \
+[[ ! -f $rootfs_image_path ]] && \
 	fatal "can't find root fs image at $rootfs_image_path"
 
 elevate $@
@@ -49,7 +49,7 @@ echo Installing headers and modules...
 mak headers_install INSTALL_HDR_PATH=/mnt/usr/
 mak modules_install INSTALL_MOD_PATH=/mnt/
 
-if [ -z "$USE_EXISTING_IMAGE" ] && [ -n "$ENABLE_GCOV" ]; then
+if [[ -z "$USE_EXISTING_IMAGE" ]] && [[ -n "$ENABLE_GCOV" ]]; then
 	# We need to copy the linux source code to be able to gcov it.
 	echo "Copying linux source to image (gcov)..."
 

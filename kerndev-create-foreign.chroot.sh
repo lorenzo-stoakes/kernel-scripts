@@ -23,7 +23,7 @@ chroot_path="/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin"
 # Taken from http://unix.stackexchange.com/a/14346. Non-root version didn't work.
 function inside_chroot()
 {
-	[ "$(stat -c %d:%i /)" != "$(stat -c %d:%i /proc/1/root/.)" ]
+	[[ "$(stat -c %d:%i /)" != "$(stat -c %d:%i /proc/1/root/.)" ]]
 }
 
 function usage()
@@ -42,7 +42,7 @@ if ! inside_chroot; then
 	echo not inside chroot! >&2
 	exit 1
 fi
-if [ -z "$username" ]; then
+if [[ -z "$username" ]]; then
 	usage
 	exit 1
 fi
@@ -73,7 +73,7 @@ cat /etc/_hosts >> /etc/hosts
 rm /etc/_hosts
 
 echo Setting up root password...
-if [ -z "$password" ]; then
+if [[ -z "$password" ]]; then
 	# Don't let a typo ruin our day!
 	while ! passwd; do
 		echo Try again!

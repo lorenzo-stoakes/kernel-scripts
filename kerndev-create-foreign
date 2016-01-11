@@ -3,7 +3,7 @@ set -e; set -o pipefail; source kerndev-shared.sh
 
 # TODO: Duplicates kerndev-create, lots of copy-pasta, de-duplicate!!
 
-[ -z "$1" ] && fatal missing arch.
+[[ -z "$1" ]] && fatal missing arch.
 
 target_arch=$1
 shift
@@ -34,16 +34,16 @@ chroot_path="/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin"
 
 function cleanup()
 {
-	[ -f $binfmt_path/$target_arch ] && echo -1 > $binfmt_path/$target_arch
+	[[ -f $binfmt_path/$target_arch ]] && echo -1 > $binfmt_path/$target_arch
 	rm -f /mnt/usr/bin/qemu-$target_arch-static
 	unmount
 }
 
 # Sanity checks.
 check_exists debootstrap qemu-system-$target_arch qemu-$target_arch-static
-[ ! -d $binfmt_path ] && fatal "binfmt not available."
+[[ ! -d $binfmt_path ]] && fatal "binfmt not available."
 
-[ -n $USE_EXISTING_IMAGE ] && [ ! -f $KERNDEV_PATH/$rootfs ] && \
+[[ -n $USE_EXISTING_IMAGE ]] && [[ ! -f $KERNDEV_PATH/$rootfs ]] && \
 	fatal "can't find existing rootfs image"
 
 # So many commands need sudo, so just force the issue.
@@ -57,7 +57,7 @@ mkdir -p $KERNDEV_PATH
 
 push_kerndev
 
-if [ -z "$USE_EXISTING_IMAGE" ]; then
+if [[ -z "$USE_EXISTING_IMAGE" ]]; then
 	echo Creating and formatting rootfs image file...
 	rm -f $rootfs
 	truncate -s $IMAGE_SIZE $rootfs
@@ -67,7 +67,7 @@ fi
 mount_image $rootfs
 trap cleanup EXIT
 
-if [ -z "$USE_EXISTING_IMAGE" ]; then
+if [[ -z "$USE_EXISTING_IMAGE" ]]; then
 	echo "Downloading and installing first stage rootfs into image..."
 
 	debootstrap --arch=$debootstrap_arch --variant=minbase --foreign  \
@@ -79,7 +79,7 @@ echo Enabling binfmt for chroot...
 cp $(which qemu-${target_arch}-static) /mnt/usr/bin/
 echo "$binfmt_sig" > $binfmt_path/register
 
-if [ -z "$USE_EXISTING_IMAGE" ]; then
+if [[ -z "$USE_EXISTING_IMAGE" ]]; then
 	echo Entering chroot, downloading and installing second stage rootfs into image...
 	chroot /mnt /debootstrap/debootstrap --second-stage >/dev/null
 fi
@@ -103,7 +103,7 @@ nameserver 8.8.8.8
 nameserver 8.8.4.4
 EOF
 
-if [ -n "$ACCESS_CHROOT" ]; then
+if [[ -n "$ACCESS_CHROOT" ]]; then
 	echo Entering chroot shell...
 	arch-chroot /mnt env -i TERM=ansi PATH=$chroot_path /bin/bash
 	echo ...chroot shell done!

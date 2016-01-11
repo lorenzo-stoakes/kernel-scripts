@@ -12,7 +12,7 @@ set -e; set -o pipefail
 #DEBUG_OUTPUT=1
 function say()
 {
-	[ -n "$DEBUG_OUTPUT" ] && echo $@ || true
+	[[ -n "$DEBUG_OUTPUT" ]] && echo $@ || true
 }
 
 function error()

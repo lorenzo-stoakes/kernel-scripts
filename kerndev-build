@@ -7,10 +7,10 @@ set -e; set -o pipefail; source kerndev-shared.sh
 target_arch=${1:-"x86_64"}
 
 # Sanity checks.
-[ ! -d $LINUX_DEV_PATH ] && fatal "can't find linux dev path at $LINUX_DEV_PATH"
-[ ! -f $LINUX_DEV_PATH/REPORTING-BUGS ] && \
+[[ ! -d $LINUX_DEV_PATH ]] && fatal "can't find linux dev path at $LINUX_DEV_PATH"
+[[ ! -f $LINUX_DEV_PATH/REPORTING-BUGS ]] && \
 	fatal "Doesn't look like a linux dev path: $LINUX_DEV_PATH"
-[ $EUID = 0 ] && fatal "Don't run as root, causes file ownership pain"
+[[ $EUID = 0 ]] && fatal "Don't run as root, causes file ownership pain"
 
 case $target_arch in
 arm)
@@ -27,7 +27,7 @@ aarch64)
 	;;
 esac
 
-if [ "$target_arch" != "x86_64" ]; then
+if [[ "$target_arch" != "x86_64" ]]; then
 	# Make sure we have cross-compilers. `gcc` check should suffice.
 	check_exists ${cross_compile_prefix}gcc
 
@@ -51,7 +51,7 @@ echo Compiling kernel...
 # 1 extra thread to account for I/O waiting.
 mak -j$((cores + 1))
 
-if [ -z "$DONT_INSTALL" ]; then
+if [[ -z "$DONT_INSTALL" ]]; then
 	NO_DONE=y sudo -E kerndev-install $target_arch
 fi
 

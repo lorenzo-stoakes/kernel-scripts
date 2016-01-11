@@ -21,13 +21,13 @@ case $target_arch in
 esac
 
 # Sanity checks.
-[ ! -f "/etc/arch-release" ] && \
+[[ ! -f "/etc/arch-release" ]] && \
 	fatal This script is designed for arch linux only, sorry!
 
 check_exists kerndev-create.chroot.sh kerndev-build kerndev-install pacstrap \
 	    truncate mkfs.ext4 arch-chroot
 
-[ -n $USE_EXISTING_IMAGE ] && [ ! -f $KERNDEV_PATH/rootfs.img ] && \
+[[ -n $USE_EXISTING_IMAGE ]] && [[ ! -f $KERNDEV_PATH/rootfs.img ]] && \
 	fatal "can't find existing rootfs image"
 
 chroot_script_path=$(which kerndev-create.chroot.sh)
@@ -36,7 +36,7 @@ chroot_script_path=$(which kerndev-create.chroot.sh)
 elevate $@
 
 # We want access to the underlying user.
-[ -z "$SUDO_USER" ] && fatal please run this using sudo!
+[[ -z "$SUDO_USER" ]] && fatal please run this using sudo!
 
 # If this fails due to being unable to unmount /mnt, mount below will fail so we
 # can get away with ||true here.
@@ -46,7 +46,7 @@ mkdir -p $KERNDEV_PATH
 
 push_kerndev
 
-if [ -z "$USE_EXISTING_IMAGE" ]; then
+if [[ -z "$USE_EXISTING_IMAGE" ]]; then
 	echo Creating and formatting rootfs image file...
 	rm -f rootfs.img
 	truncate -s $IMAGE_SIZE rootfs.img
@@ -58,7 +58,7 @@ fi
 mount_image rootfs.img
 trap "umount /mnt" EXIT
 
-if [ -z "$USE_EXISTING_IMAGE" ]; then
+if [[ -z "$USE_EXISTING_IMAGE" ]]; then
 	echo Downloading and installing rootfs into image...
 	pacstrap /mnt base base-devel &>/dev/null
 fi
@@ -78,7 +78,7 @@ EOF
 
 echo ...chroot-ed script complete!
 
-if [ -z "$USE_EXISTING_IMAGE" ] && [ -n "$ENABLE_GCOV" ]; then
+if [[ -z "$USE_EXISTING_IMAGE" ]] && [[ -n "$ENABLE_GCOV" ]]; then
     echo Generating gcov script...
 
 	# Create 'cov' tool to check coverage for a specific file in the kernel tree.
@@ -87,7 +87,7 @@ if [ -z "$USE_EXISTING_IMAGE" ] && [ -n "$ENABLE_GCOV" ]; then
 	cat >$cov_path <<-EOF
 		#!/bin/bash
 
-		[ -z "\$1" ] && echo "usage: \$(basename \$0) [relative path to source file]" >&2 && exit 1
+		[[ -z "\$1" ]] && echo "usage: \$(basename \$0) [relative path to source file]" >&2 && exit 1
 
 		# ref: https://goo.gl/rnd6yo
 		args=\${@:1:-1}
@@ -106,7 +106,7 @@ if [ -z "$USE_EXISTING_IMAGE" ] && [ -n "$ENABLE_GCOV" ]; then
 	pop
 fi
 
-if [ -n "$ACCESS_CHROOT" ]; then
+if [[ -n "$ACCESS_CHROOT" ]]; then
 	echo Entering chroot shell...
 	arch-chroot /mnt
 	echo ...chroot shell done!

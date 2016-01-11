@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # TODO: Get maintainer for all files in dir if no args?
-if [ -z "$1" ]; then
-   echo usage: get_maintainer [files...] >&2
+if [[ -z "$1" ]]; then
+   echo usage: get_maintainer [[files...]] >&2
    exit 1
 fi
 
@@ -10,14 +10,14 @@ prefix=$HOME/linux
 
 # Hacky way of determining we're not in the kernel root.
 isntroot() {
-    [ ! -f REPORTING-BUGS ]
+    [[ ! -f REPORTING-BUGS ]]
 }
 
 gotoroot() {
 	while isntroot; do
 	    cd ..
 
-	    if [ $PWD = "/" ]; then
+	    if [[ $PWD = "/" ]]; then
 		echo get_maintainer: couldn\'t find linux root >&2
 		exit 1
 	    fi
@@ -26,7 +26,7 @@ gotoroot() {
 
 for file in $@; do
     path=$(readlink -f $file)
-    if [ ! -f $path ]; then
+    if [[ ! -f $path ]]; then
 	echo get_maintainer: no such file: $path >&2
 	exit 1
     fi

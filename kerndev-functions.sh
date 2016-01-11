@@ -48,7 +48,7 @@ function push_kerndev()
 # If parameters are to be preserved, needs to be passed $@.
 function elevate()
 {
-	if [ $EUID != 0 ]; then
+	if [[ $EUID != 0 ]]; then
 		exec sudo -E $0 $@
 		exit $?
 	fi
@@ -85,7 +85,7 @@ function unmount()
 # $1: Directory to 'give back' to user $SUDO_USER.
 function give_back()
 {
-	[ -z "$SUDO_USER" ] && error "give_back: SUDO_USER not defined." || \
+	[[ -z "$SUDO_USER" ]] && error "give_back: SUDO_USER not defined." || \
 		chown -R $SUDO_USER:$SUDO_USER $1
 }
 
@@ -94,7 +94,7 @@ function give_back()
 # $@: make arguments.
 function mak()
 {
-	[ -z $VERBOSE ] && out="null" || out="tty"
+	[[ -z $VERBOSE ]] && out="null" || out="tty"
 
 	make $make_opts $@ >/dev/$out
 }
@@ -103,13 +103,13 @@ function mak()
 # $1: Argument.
 function is_opt()
 {
-	[[ $1 == -* ]]
+	[[[[ $1 == -* ]]]]
 }
 
 # Say we're done, if we're not configured to not do so.
 function say_done()
 {
-	[ -z "$NO_DONE" ] && echo Done! || true
+	[[ -z "$NO_DONE" ]] && echo Done! || true
 }
 
 

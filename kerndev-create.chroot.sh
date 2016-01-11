@@ -15,7 +15,7 @@ password=$2 # Optional, if not provided script will prompt.
 # Taken from http://unix.stackexchange.com/a/14346. Non-root version didn't work.
 function inside_chroot()
 {
-	[ "$(stat -c %d:%i /)" != "$(stat -c %d:%i /proc/1/root/.)" ]
+	[[ "$(stat -c %d:%i /)" != "$(stat -c %d:%i /proc/1/root/.)" ]]
 }
 
 function usage()
@@ -28,7 +28,7 @@ if ! inside_chroot; then
 	echo not inside chroot! >&2
 	exit 1
 fi
-if [ -z "$username" ]; then
+if [[ -z "$username" ]]; then
 	usage
 	exit 1
 fi
@@ -60,7 +60,7 @@ pacman -Sy --noconfirm btrfs-progs yaourt screen strace zsh lsof emacs-nox opens
 pacman -R --noconfirm linux &>/dev/null || true
 
 echo Setting up root password...
-if [ -z "$password" ]; then
+if [[ -z "$password" ]]; then
 	# Don't let a typo ruin our day!
 	while ! passwd; do
 	echo Try again!

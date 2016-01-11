@@ -16,14 +16,14 @@ function get_full_path()
 	echo "$( cd "$1" ; pwd -P )"
 }
 
-([ -z "$1" ] || ([ -f "$1" ] && [ ! -d "$1" ])) && usage
+([[ -z "$1" ]] || ([[ -f "$1" ]] && [[ ! -d "$1" ]])) && usage
 
 # Generate if doesn't exist.
 install -dm755 $1
 
 target_dir=$(get_full_path $1)
 karch=${2:-x86}
-if [ "$#" -gt 2 ]; then
+if [[ "$#" -gt 2 ]]; then
     shift 2
     make_opts="$@"
 fi
@@ -37,9 +37,9 @@ drivers/media/dvb-frontends drivers/media/usb/dvb-usb drivers/media/tuners"
 push_linux
 trap pop EXIT
 
-[ ! -f .config ] && fatal "Missing kernel configuration."
-[ ! -f Module.symvers ] && fatal "Missing Module.symvers, build kernel to generate."
-[ ! -d "$karch_dir" ] && fatal "Unrecognised karch: $karch"
+[[ ! -f .config ]] && fatal "Missing kernel configuration."
+[[ ! -f Module.symvers ]] && fatal "Missing Module.symvers, build kernel to generate."
+[[ ! -d "$karch_dir" ]] && fatal "Unrecognised karch: $karch"
 
 echo Running modules_prepare...
 make $make_opts modules_prepare >/dev/null
@@ -57,7 +57,7 @@ find include -mindepth 1 -maxdepth 1 -type d | \
     xargs -I {} cp -a "{}" "$target_dir/include"
 
 for d in include $extra_header_dirs; do
-	[ -d "$d" ] && mkdir -p "$target_dir/$d"
+	[[ -d "$d" ]] && mkdir -p "$target_dir/$d"
 done
 
 mkdir -p "$target_karch_dir"
@@ -76,12 +76,12 @@ cp "$karch_dir/Makefile" "$target_karch_dir"
 # May as well always copy these if available.
 for f in Makefile_32.cpu kernel/asm-offsets.s; do
 	p="$karch_dir/$f"
-	[ -f $p ] && cp "$p" "$target_karch_dir/$f"
+	[[ -f $p ]] && cp "$p" "$target_karch_dir/$f"
 done
 
 # Copy in extra headers. Directories already created above.
 for d in $extra_header_dirs; do
-	[ -d "$d" ] && cp $d/*.h "$target_dir/$d"
+	[[ -d "$d" ]] && cp $d/*.h "$target_dir/$d"
 done
 
 # Specific required files.

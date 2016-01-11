@@ -29,7 +29,7 @@ tap_nic=$(get_tap_name)
 elevate $@
 
 # We want access to the underlying user.
-[ -z "$SUDO_USER" ] && fatal Please run this using sudo!
+[[ -z "$SUDO_USER" ]] && fatal Please run this using sudo!
 
 qemu=qemu-system-${target_arch}
 
