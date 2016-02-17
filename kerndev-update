@@ -62,7 +62,7 @@ printf $output_format "BRANCH" "DIR"
 
 # Your trees may vary :-)
 update ~/linux              master linux-stable linux-next
-update ~/linux-staging      master test staging-next staging-testing
+update ~/linux-staging      master staging-next staging-testing
 update ~/linux-mm           master since-4.3
 
 say_done
