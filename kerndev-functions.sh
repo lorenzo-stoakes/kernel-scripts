@@ -45,7 +45,7 @@ function push_kerndev()
 }
 
 # Replaces the current script with an elevated version of itself.
-# If parameters are to be preserved, needs to be passed $@.
+# If parameters need to be preserved, they need to be passed thorough via $@.
 function elevate()
 {
 	if [[ $EUID != 0 ]]; then
