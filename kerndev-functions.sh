@@ -103,7 +103,7 @@ function mak()
 # $1: Argument.
 function is_opt()
 {
-	[[[[ $1 == -* ]]]]
+	[[ $1 == -* ]]
 }
 
 # Say we're done, if we're not configured to not do so.
