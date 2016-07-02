@@ -61,8 +61,8 @@ echo Updating linux git trees...
 printf $output_format "BRANCH" "DIR"
 
 # Your trees may vary :-)
-update ~/linux              master linux-stable linux-next
-update ~/linux-staging      master staging-next staging-testing
-update ~/linux-mm           master since-4.5
+update ~/kerndev/kernels/linux   master linux-stable linux-next
+update ~/kerndev/kernels/staging master staging-next staging-testing
+update ~/kerndev/kernels/mm      master since-4.5
 
 say_done
