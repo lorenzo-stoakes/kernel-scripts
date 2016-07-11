@@ -6,8 +6,6 @@ if [[ -z "$1" ]]; then
 	exit 1
 fi
 
-prefix=$HOME/linux
-
 # Hacky way of determining we're not in the kernel root.
 isntroot() {
 	[[ ! -f REPORTING-BUGS ]]
@@ -28,11 +26,6 @@ for file in $@; do
 	path=$(readlink -f $file)
 	if [[ ! -f $path ]]; then
 		echo get_maintainer: no such file: $path >&2
-		exit 1
-	fi
-
-	if [[ ! $path =~ ^$prefix ]]; then
-		echo get_maintainer: doesn\'t look like a linux tree >&2
 		exit 1
 	fi
 
