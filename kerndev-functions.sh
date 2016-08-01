@@ -1,6 +1,12 @@
 #!/bin/bash
 set -e; set -o pipefail
 
+function is_linux_dir()
+{
+	# Something of a hack but should be effective.
+	[[ -d "arch" ]] && [[ -f "REPORTING-BUGS" ]] && [[ -f "Kbuild" ]]
+}
+
 # Displays parameteters with command name prepended, outputted to stderr.
 # $@: message to display.
 function error()
@@ -34,7 +40,13 @@ function pop()
 # available.
 function push_linux()
 {
-	push $LINUX_DEV_PATH
+	if is_linux_dir; then
+		path="."
+	else
+		path="$LINUX_DEV_PATH"
+	fi
+
+	push $path
 }
 
 # Pushes into kernel dev directory (at $KERNDEV_PATH), assumes this variable is
