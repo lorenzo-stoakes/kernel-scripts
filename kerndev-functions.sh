@@ -157,3 +157,10 @@ function kdisable()
 {
 	config disable $@
 }
+
+# Outputs the current script directory.
+function script_dir()
+{
+	# Source: http://stackoverflow.com/a/246128/6380063
+	echo "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+}
