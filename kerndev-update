@@ -2,6 +2,7 @@
 set -e; set -o pipefail; source kerndev-shared.sh
 
 output_format="%-15s\t%s\n"
+repos_path="$(script_dir)/.repos"
 
 # Functions.
 
@@ -56,13 +57,21 @@ function update()
 	exitdir
 }
 
+# The .repos file is of the following format:
+
+# <path to kernel1> branch1 branch2 ... branchN
+# <path to kernel2> branch1 branch2 ... branchN
+# ...
+# <path to kernelN> branch1 branch2 ... branchN
+
+[[ -f "$repos_path" ]] || fatal 'Missing .repos'
+
 echo Updating linux git trees...
 
 printf $output_format "BRANCH" "DIR"
 
-# Your trees may vary :-)
-update ~/kerndev/kernels/linux   master linux-stable linux-next
-update ~/kerndev/kernels/staging master staging-next staging-testing
-update ~/kerndev/kernels/mm      master since-4.5
+while read line; do
+	update $line
+done < "$repos_path"
 
 say_done
