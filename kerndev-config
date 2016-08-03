@@ -9,7 +9,7 @@ if [[ -n "$REBUILD" ]] || [[ ! -f .config ]]; then
 fi
 
 # Show extra version info.
-kenable local_version_auto
+kenable localversion_auto
 
 # Required for systemd.
 kenable fhandle
