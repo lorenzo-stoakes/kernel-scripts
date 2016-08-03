@@ -131,19 +131,9 @@ function config()
 	choice=$1
 	shift
 
-	case $choice in
-	enable)
-		;&
-	disable)
-		for setting in $@; do
-			scripts/config --$choice $setting
-		done
-		;;
-	*)
-		scripts/config --$choice $@
-		;;
-
-	esac
+	for setting in $@; do
+		scripts/config --$choice $setting
+	done
 }
 
 # Enable kernal settings $@...
