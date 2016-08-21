@@ -24,6 +24,8 @@ function get_tap_name() {
 	done
 }
 
+check_exists idemptables
+
 tap_nic=$(get_tap_name)
 
 elevate $@
