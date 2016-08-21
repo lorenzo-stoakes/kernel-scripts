@@ -65,7 +65,7 @@ function create_br()
 		fi
 	else
 		say "Creating bridge interface '$1'"
-	brctl addbr "$1"
+		brctl addbr "$1"
 		#ip link add name "$1" type bridge
 		ip link set dev "$1" up
 
