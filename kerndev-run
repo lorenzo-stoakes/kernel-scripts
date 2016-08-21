@@ -9,7 +9,6 @@ target_arch=${1:-"x86_64"}
 
 tap_limit=10
 br_nic="qemu-br0"
-wan_nic="enp2s0"
 mac="de:ad:be:ef:f0:0f"
 
 # Functions.
@@ -24,7 +23,13 @@ function get_tap_name() {
 	done
 }
 
-check_exists idemptables
+function determine_wan_nic()
+{
+	# Adapted from http://unix.stackexchange.com/a/302613 with love.
+	ip route ls | grep default | grep -Po '(?<=(dev ))[^ ]+'
+}
+
+check_exists brctl idemptables
 
 tap_nic=$(get_tap_name)
 
@@ -78,8 +83,15 @@ esac
 shared_opts="-nographic -m $QEMU_RAM -smp $QEMU_CORES -s -echr 0x02"
 shared_append="root=/dev/vda rw loglevel=2"
 
-kerndev-qemu-tap-helper.sh $SUDO_USER $tap_nic $br_nic $wan_nic up
-trap "kerndev-qemu-tap-helper.sh $SUDO_USER $tap_nic $br_nic $wan_nic down" EXIT
+
+wan_nic=$(determine_wan_nic)
+if [[ -n "$wan_nic" ]]; then
+	kerndev-qemu-tap-helper.sh $SUDO_USER $tap_nic $br_nic $wan_nic up
+	trap "kerndev-qemu-tap-helper.sh $SUDO_USER $tap_nic $br_nic $wan_nic down" EXIT
+else
+	echo "WARN: Couldn't determine NIC, networking will not work." >&2
+	unset arch_net_opts
+fi
 
 $qemu $shared_opts $arch_opts $arch_net_opts $QEMU_CUSTOM_SETTINGS \
 	-kernel $kernel_image_path -append "$shared_append $arch_append"
