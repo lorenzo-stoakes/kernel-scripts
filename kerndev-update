@@ -51,7 +51,7 @@ function update()
 		printf $output_format $branch $PWD
 
 		git checkout --quiet $branch
-		git pull --quiet --rebase
+		git pull --quiet --rebase --strategy-option=theirs
 	done
 
 	exitdir
