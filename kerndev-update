@@ -48,10 +48,10 @@ function update()
 	enterdir $dir
 
 	for branch in $@; do
+		printf $output_format $branch $PWD
+
 		git checkout --quiet $branch
 		git pull --quiet --rebase
-
-		printf $output_format $branch $PWD
 	done
 
 	exitdir
