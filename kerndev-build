@@ -8,7 +8,7 @@ target_arch=${1:-"x86_64"}
 
 # Sanity checks.
 [[ ! -d $LINUX_DEV_PATH ]] && fatal "can't find linux dev path at $LINUX_DEV_PATH"
-[[ ! -f $LINUX_DEV_PATH/REPORTING-BUGS ]] && \
+[[ -f $LINUX_DEV_PATH/MAINTAINERS ]] && [[ -d $LINUX_DEV_PATH/kernel ]] || \
 	fatal "Doesn't look like a linux dev path: $LINUX_DEV_PATH"
 [[ $EUID = 0 ]] && fatal "Don't run as root, causes file ownership pain"
 
