@@ -16,8 +16,7 @@ x86_64)
 	rootfs=rootfs.img
 	kernel_image_path=$LINUX_DEV_PATH/arch/x86/boot/bzImage
 
-	[[ ! -f $LINUX_DEV_PATH/REPORTING-BUGS ]] && \
-		fatal "doesn't look like a linux dev path: $LINUX_DEV_PATH"
+	check_linux_dev_path
 	[[ ! -f $kernel_image_path ]] && \
 		fatal "can't find kernel image at $kernel_image_path"
 	;;

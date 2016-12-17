@@ -154,3 +154,12 @@ function script_dir()
 	# Source: http://stackoverflow.com/a/246128/6380063
 	echo "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 }
+
+# Check whether $LINUX_DEV_PATH is sane.
+function check_linux_dev_path()
+{
+	[[ -d $LINUX_DEV_PATH ]] || fatal "Couldn't find kernel at $LINUX_DEV_PATH."
+
+	[[ -f $LINUX_DEV_PATH/MAINTAINERS ]] && [[ -d $LINUX_DEV_PATH/kernel ]] || \
+		fatal "Doesn't look like a linux dev path: $LINUX_DEV_PATH"
+}

@@ -7,9 +7,7 @@ set -e; set -o pipefail; source kerndev-shared.sh
 target_arch=${1:-"x86_64"}
 
 # Sanity checks.
-[[ ! -d $LINUX_DEV_PATH ]] && fatal "can't find linux dev path at $LINUX_DEV_PATH"
-[[ -f $LINUX_DEV_PATH/MAINTAINERS ]] && [[ -d $LINUX_DEV_PATH/kernel ]] || \
-	fatal "Doesn't look like a linux dev path: $LINUX_DEV_PATH"
+check_linux_dev_path
 [[ $EUID = 0 ]] && fatal "Don't run as root, causes file ownership pain"
 
 case $target_arch in
