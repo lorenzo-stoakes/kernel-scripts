@@ -26,7 +26,7 @@ function get_tap_name() {
 function determine_wan_nic()
 {
 	# Adapted from http://unix.stackexchange.com/a/302613 with love.
-	ip route ls | grep default | grep -Po '(?<=(dev ))[^ ]+'
+	ip route ls | grep default | grep -Po '(?<=(dev ))[^ ]+' || true
 }
 
 check_exists brctl dnsmasq idemptables
