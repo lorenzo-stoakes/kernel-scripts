@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e; set -o pipefail;  source kerndev-shared.sh
 
 # TODO: Get maintainer for all files in dir if no args?
 if [[ -z "$1" ]]; then
@@ -6,13 +7,8 @@ if [[ -z "$1" ]]; then
 	exit 1
 fi
 
-# Hacky way of determining we're not in the kernel root.
-isntroot() {
-	[[ ! -f REPORTING-BUGS ]]
-}
-
 gotoroot() {
-	while isntroot; do
+	while ! is_kernel_dir .; do
 		cd ..
 
 		if [[ $PWD = "/" ]]; then
