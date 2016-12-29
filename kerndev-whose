@@ -9,7 +9,7 @@ fi
 
 function gotoroot()
 {
-	while ! is_kernel_dir .; do
+	while ! is_linux_dir; do
 		cd ..
 
 		if [[ $PWD = "/" ]]; then
