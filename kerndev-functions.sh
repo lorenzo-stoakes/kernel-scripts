@@ -1,10 +1,16 @@
 #!/bin/bash
 set -e; set -o pipefail
 
+# Determines whether the specified (or current if no arg) directory is a kernel
+# source directory.
+# $1: Directory to check (defaults to current dir.)
 function is_linux_dir()
 {
+	local path=${1:-.}
+
 	# Something of a hack but should be effective.
-	[[ -d "arch" ]] && [[ -f "REPORTING-BUGS" ]] && [[ -f "Kbuild" ]]
+	[[ -d $path/"arch" ]] && [[ -f $path/MAINTAINERS ]] && \
+		[[ -f $path/"Kbuild" ]]
 }
 
 # Displays parameteters with command name prepended, outputted to stderr.
