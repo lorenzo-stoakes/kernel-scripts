@@ -7,7 +7,8 @@ if [[ -z "$1" ]]; then
 	exit 1
 fi
 
-gotoroot() {
+function gotoroot()
+{
 	while ! is_kernel_dir .; do
 		cd ..
 
