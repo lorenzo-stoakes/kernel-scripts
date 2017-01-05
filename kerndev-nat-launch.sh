@@ -23,13 +23,13 @@ else
 fi
 
 mask=/24
-subnet_ip=192.168.1.0$mask
-server_ip=192.168.1.23$mask
+subnet_ip=192.168.137.0$mask
+server_ip=192.168.137.23$mask
 iptables=/usr/bin/idemptables
 dnsmasq_pid=/run/dnsmasq.pid
 dnsmasq_lease=/run/dnsmasq.lease
 dnsmasq_port=0
-dnsmasq_dhcp_range="192.168.1.100,192.168.1.150,6h"
+dnsmasq_dhcp_range="192.168.137.100,192.168.137.150,6h"
 
 source kerndev-nat-launch-subnet.sh
 

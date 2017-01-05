@@ -35,7 +35,7 @@ REQUIRED VARIABLES
   dnsmasq_port=53
 
   # The DHCP range, see dnsmasq(8) for details.
-  dnsmasq_dhcp_range="192.168.1.100,192.168.1.200,12h"
+  dnsmasq_dhcp_range="192.168.137.100,192.168.137.200,12h"
 
 OPTIONAL VARIABLES
   # Function or external scripts to run before before and after bringing the
