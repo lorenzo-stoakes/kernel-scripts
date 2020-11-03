@@ -35,6 +35,7 @@ fi
 
 echo Configuring system...
 # We want to use the network :)
+pacman -S --noconfirm dhcpcd
 systemctl -q enable dhcpcd
 # Retrieve wget so we can set it as the transfer command in a moment.
 pacman -S --noconfirm wget &>/dev/null
