@@ -40,14 +40,10 @@ systemctl -q enable dhcpcd
 pacman -S --noconfirm wget &>/dev/null
 # We assign Google DNS servers (outside this script), so fuck this hook.
 echo "nohook resolv.conf" >> /etc/dhcpcd.conf
-# Configure pacman to use wget for perf, allow yaourt.
+# Configure pacman to use wget for perf.
 cat >>/etc/pacman.conf <<EOF
 [options]
 XferCommand = /usr/bin/wget -c -q --show-progress --passive-ftp -O %o %u
-
-[archlinuxfr]
-SigLevel = Never
-Server = http://repo.archlinux.fr/\$arch
 EOF
 # No delay for incorrect password reattempt. Pet peeve!
 sed -i 's/try_first_pass/try_first_pass nodelay/' /etc/pam.d/system-auth
@@ -55,7 +51,7 @@ echo tux > /etc/hostname
 
 # Now get the packages we want.
 echo Installing packages...
-pacman -Sy --noconfirm btrfs-progs yaourt screen strace zsh lsof emacs-nox openssh &>/dev/null
+pacman -Sy --noconfirm btrfs-progs screen strace zsh lsof emacs-nox openssh patch git &>/dev/null
 # We don't need the linux package, we link to the kernel via a qemu switch.
 pacman -R --noconfirm linux &>/dev/null || true
 
@@ -96,8 +92,14 @@ chown -R $username:$username /home/$username/.ssh
 
 echo Configuring zsh...
 user_zshrc=/home/$username/.zshrc
-# Needs to run as user otherwise makepkg throws a fit.
-sudo -u $username yaourt -S --noconfirm oh-my-zsh-git &>/dev/null
+
+# Install oh-my-zsh
+rm -rf /tmp/ls__omz
+sudo -u $username git clone https://aur.archlinux.org/oh-my-zsh-git.git /tmp/ls__omz &>/dev/null
+cd /tmp/ls__omz
+sudo -u $username makepkg -s &>/dev/null
+pacman --noconfirm -U *.zst
+
 chsh -s /usr/bin/zsh $username >/dev/null
 echo ZSH_THEME=\"gallois\" > $user_zshrc
 cat /usr/share/oh-my-zsh/zshrc | grep -v ZSH_THEME >> $user_zshrc
