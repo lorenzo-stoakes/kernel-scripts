@@ -65,10 +65,17 @@ x86_64)
 	kernel_image_path=$LINUX_DEV_PATH/arch/x86/boot/bzImage
 	rootfs_image_path=$KERNDEV_PATH/rootfs.img
 
-	arch_opts="-enable-kvm
-	-cpu host
-	-drive file=$rootfs_image_path,if=virtio,cache=none,format=raw
-	-boot once=c"
+	if lsmod | grep kvm > /dev/null; then
+		arch_opts="-enable-kvm
+		-cpu host
+		-drive file=$rootfs_image_path,if=virtio,cache=none,format=raw
+		-boot once=c"
+	else
+		arch_opts="-cpu Haswell
+		-drive file=$rootfs_image_path,if=virtio,cache=none,format=raw
+		-boot once=c"
+	fi
+
 	arch_append="console=ttyS0"
 	arch_net_opts="-net nic,model=virtio,macaddr=$mac
 	 -net tap,ifname=$tap_nic,script=no,downscript=no"
