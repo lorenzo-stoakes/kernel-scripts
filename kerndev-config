@@ -39,6 +39,13 @@ kenable ikconfig ikconfig_proc
 # Taken with thanks from http://unix.stackexchange.com/a/116888.
 scripts/config --set-str uevent_helper_path ""
 
+# Pull down PSI information.
+kenable psi
+
+# Disable STACKPROTECTOR_STRONG to avoid gcc 10 issues as described at
+# http://rglinuxtech.com/?p=2694 (seems applicable to kernels around ~5.5).
+kdisable stackprotector_strong
+
 # Optionally enable flags for docker support.
 [[ -n "$ENABLE_DOCKER_SUPPORT" ]] && \
     kenable netfilter_advanced dm_thin_provisioning bridge bridge_netfilter \
