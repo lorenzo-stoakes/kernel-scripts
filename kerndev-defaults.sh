@@ -12,7 +12,15 @@ kmod"
 debian_version_default=jessie
 image_size_default=30G
 kerndev_path_default=$HOME/kerndev/qemu-images
-linux_dev_path_default=$HOME/kerndev/kernels/linux
+
+# If we are in what looks like a kernel directory, then assume this is where we
+# want to run.
+if [[ "$PWD" =~ "$HOME/kerndev/kernels/linux" ]]; then
+   linux_dev_path_default=$PWD
+else
+   linux_dev_path_default=$HOME/kerndev/kernels/linux
+fi
+
 qemu_cores_default=4
 qemu_ram_default=2G
 
