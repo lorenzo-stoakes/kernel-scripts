@@ -169,3 +169,23 @@ function check_linux_dev_path()
 	is_linux_dir $LINUX_DEV_PATH || \
 		fatal "Doesn't look like a linux dev path: $LINUX_DEV_PATH"
 }
+
+# Finds the base linux kernel path of the specified directory contained within a
+# kernel directory structure, or if it can't be found just returns the path.
+function find_base_linux_path()
+{
+	local path=$1
+	push $path || fatal "Invalid path $path?!"
+
+	while [[ $PWD != "/" ]] && ! is_linux_dir $PWD; do
+		cd ..
+	done
+
+	if [[ $PWD == "/" ]]; then
+		echo $path
+	else
+		echo $PWD
+	fi
+
+	pop
+}
