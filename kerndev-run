@@ -38,6 +38,7 @@ elevate $@
 # We want access to the underlying user.
 [[ -z "$SUDO_USER" ]] && fatal Please run this using sudo!
 
+# Default to assuming the target_arch is an actual qemu arch.
 qemu=qemu-system-${target_arch}
 
 case $target_arch in
@@ -61,17 +62,18 @@ aarch64)
 		 -device virtio-net-device,netdev=tap"
 
 	;;
-x86_64)
+x86_64|icelake)
 	kernel_image_path=$LINUX_DEV_PATH/arch/x86/boot/bzImage
 	rootfs_image_path=$KERNDEV_PATH/rootfs.img
 
-	if lsmod | grep kvm > /dev/null; then
-		arch_opts="-enable-kvm
-		-cpu host
+	if [[ "$target_arch" == "icelake" ]] || ! lsmod | grep kvm > /dev/null; then
+		qemu=qemu-system-x86_64
+		arch_opts="-cpu Icelake-Server
 		-drive file=$rootfs_image_path,if=virtio,cache=none,format=raw
 		-boot once=c"
 	else
-		arch_opts="-cpu Haswell
+		arch_opts="-enable-kvm
+		-cpu host
 		-drive file=$rootfs_image_path,if=virtio,cache=none,format=raw
 		-boot once=c"
 	fi
