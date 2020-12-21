@@ -26,11 +26,11 @@ kenable tun
 # virtio stuff.
 kenable virtio_pci virtio_mmio virtio_blk virtio_net virtio_console \
 	virtio_pci_legacy virtio_input virtio_mmio_cmdline_devices
-kdisable hw_random_virtio virtio_balloon
+kdisable hw_random_virtio virtio_balloon drm_virtio_gpu crypto_dev_virtio
 
 # Debugging settings.
 kenable debug_info debug_info_split debug_info_dwarf4 gdb_scripts frame_pointer
-kdisable debug_info_reduced debug_rodata
+kdisable debug_info_reduced debug_rodata debug_info_compressed
 
 # Gain access to /proc/config.gz.
 kenable ikconfig ikconfig_proc
@@ -41,6 +41,7 @@ scripts/config --set-str uevent_helper_path ""
 
 # Pull down PSI information.
 kenable psi
+kdisable psi_default_disabled
 
 # Disable STACKPROTECTOR_STRONG to avoid gcc 10 issues as described at
 # http://rglinuxtech.com/?p=2694 (seems applicable to kernels around ~5.5).
