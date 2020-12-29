@@ -32,6 +32,9 @@ kdisable hw_random_virtio virtio_balloon drm_virtio_gpu crypto_dev_virtio
 kenable debug_info debug_info_split debug_info_dwarf4 gdb_scripts frame_pointer
 kdisable debug_info_reduced debug_rodata debug_info_compressed
 
+# Remove irritating debug messages we don't care about.
+kdisable debug_stack_usage audit
+
 # Gain access to /proc/config.gz.
 kenable ikconfig ikconfig_proc
 
@@ -59,5 +62,7 @@ kdisable stackprotector_strong
 # Optionally, we are interested in code coverage.
 [[ -n "$ENABLE_GCOV" ]] && \
 	kenable debug_fs gcov_kernel gcov_format_autodetect gcov_profile_all
+
+make olddefconfig
 
 pop
