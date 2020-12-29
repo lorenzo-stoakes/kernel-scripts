@@ -91,6 +91,7 @@ esac
 # '-echr 0x02' moves escape key to C-b to avoid C-a getting nerfed.
 shared_opts="-nographic -m $QEMU_RAM -smp $QEMU_CORES -s -echr 0x02"
 #shared_append="root=/dev/vda rw loglevel=9 earlyprintk=ttyS0 memblock=debug"
+#shared_append="root=/dev/vda rw earlyprintk=ttyS0 kernelcore=10G"
 shared_append="root=/dev/vda rw earlyprintk=ttyS0"
 
 wan_nic=$(determine_wan_nic)
