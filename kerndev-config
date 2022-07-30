@@ -63,6 +63,8 @@ kdisable stackprotector_strong
 [[ -n "$ENABLE_GCOV" ]] && \
 	kenable debug_fs gcov_kernel gcov_format_autodetect gcov_profile_all
 
+kenable transparent_hugepage
+
 make olddefconfig
 
 pop
