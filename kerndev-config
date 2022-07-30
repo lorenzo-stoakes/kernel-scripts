@@ -29,7 +29,7 @@ kenable virtio_pci virtio_mmio virtio_blk virtio_net virtio_console \
 kdisable hw_random_virtio virtio_balloon drm_virtio_gpu crypto_dev_virtio
 
 # Debugging settings.
-kenable debug_info debug_info_split debug_info_dwarf4 gdb_scripts frame_pointer
+kenable debug_info debug_info_split debug_info_dwarf5 gdb_scripts frame_pointer
 kdisable debug_info_reduced debug_rodata debug_info_compressed
 
 # Remove irritating debug messages we don't care about.
