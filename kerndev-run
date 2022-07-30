@@ -92,7 +92,8 @@ esac
 shared_opts="-nographic -m $QEMU_RAM -smp $QEMU_CORES -s -echr 0x02"
 #shared_append="root=/dev/vda rw loglevel=9 earlyprintk=ttyS0 memblock=debug"
 #shared_append="root=/dev/vda rw earlyprintk=ttyS0 kernelcore=10G"
-shared_append="root=/dev/vda rw earlyprintk=ttyS0"
+
+shared_append="root=/dev/vda rw earlyprintk=ttyS0 loglevel=2 nokaslr"
 
 wan_nic=$(determine_wan_nic)
 if [[ -n "$wan_nic" ]]; then
