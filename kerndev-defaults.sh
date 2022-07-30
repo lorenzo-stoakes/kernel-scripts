@@ -22,7 +22,7 @@ else
 fi
 
 qemu_cores_default=4
-qemu_ram_default=2G
+qemu_ram_default=8G
 
 # Configuration options with default values:-
 
