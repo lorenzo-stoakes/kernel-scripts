@@ -89,11 +89,19 @@ x86_64|icelake)
 esac
 
 # '-echr 0x02' moves escape key to C-b to avoid C-a getting nerfed.
-shared_opts="-nographic -m $QEMU_RAM -smp $QEMU_CORES -s -echr 0x02"
-#shared_append="root=/dev/vda rw loglevel=9 earlyprintk=ttyS0 memblock=debug"
-#shared_append="root=/dev/vda rw earlyprintk=ttyS0 kernelcore=10G"
-
+shared_opts="-nographic -s -echr 0x02"
 shared_append="root=/dev/vda rw earlyprintk=ttyS0 loglevel=2 nokaslr"
+
+numa_opts="-smp ${QEMU_CORES} -m ${QEMU_RAM} "
+if [[ -n "$USE_NUMA" ]]; then
+	# Really an experimental and crazy NUMA architecture.
+	numa_opts+="-object memory-backend-ram,size=15M,id=m0 "
+	numa_opts+="-numa node,memdev=m0,cpus=1 "
+	numa_opts+="-object memory-backend-ram,size=3G,id=m1 "
+	numa_opts+="-numa node,memdev=m1,cpus=2-3 "
+	numa_opts+="-object memory-backend-ram,size=5105M,id=m2 "
+	numa_opts+="-numa node,memdev=m2,cpus=4-7"
+fi
 
 wan_nic=$(determine_wan_nic)
 if [[ -n "$wan_nic" ]]; then
@@ -104,5 +112,5 @@ else
 	unset arch_net_opts
 fi
 
-$qemu $shared_opts $arch_opts $arch_net_opts $QEMU_CUSTOM_SETTINGS \
+$qemu $shared_opts $numa_opts $arch_opts $arch_net_opts $QEMU_CUSTOM_SETTINGS \
 	-kernel $kernel_image_path -append "$shared_append $arch_append"
