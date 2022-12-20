@@ -66,5 +66,7 @@ kdisable stackprotector_strong
 kenable transparent_hugepage
 
 make olddefconfig
+# We don't need modules.
+make mod2noconfig
 
 pop
