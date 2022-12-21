@@ -65,6 +65,9 @@ kdisable stackprotector_strong
 
 kenable transparent_hugepage
 
+# Use 16kb pages on arm if set in host system.
+zgrep ARM64_16K_PAGES /proc/config.gz &>/dev/null && kenable arm64_16k_pages || true
+
 make olddefconfig
 # We don't need modules.
 make mod2noconfig
