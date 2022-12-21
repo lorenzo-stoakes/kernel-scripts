@@ -5,7 +5,7 @@ set -e; set -o pipefail; source kerndev-shared.sh
 # https://github.com/lahwaacz/archlinux-dotfiles/blob/master/Scripts/qemu-launcher.sh
 
 # If argument provided it specifies a cross-compile target architecture.
-target_arch=${1:-"x86_64"}
+target_arch=${1:-$(uname -m)}
 
 tap_limit=10
 br_nic="qemu-br0"
@@ -51,11 +51,22 @@ aarch64)
 	kernel_image_path=$LINUX_DEV_PATH/arch/arm64/boot/Image
 	rootfs_image_path=${rootfs_image_path:-$KERNDEV_PATH/rootfs_aarch64.img}
 
-	arch_opts="-machine virt
-	 -cpu cortex-a57
-	 -machine type=virt,kernel_irqchip=on
-	 -drive if=none,file=$rootfs_image_path,id=vda,format=raw
-	 -device virtio-blk-device,drive=vda"
+	if [[ "${target_arch}" != "$(uname -m)" ]]; then
+		echo $target_arch
+		arch_opts="-machine virt
+			 -cpu cortex-a57
+			 -machine type=virt,kernel_irqchip=on
+			 -drive if=none,file=$rootfs_image_path,id=vda,format=raw
+			 -device virtio-blk-device,drive=vda"
+	else
+		arch_opts="
+			-machine virt
+			-enable-kvm
+			-cpu host
+			-drive if=none,file=$rootfs_image_path,id=vda,format=raw
+			-device virtio-blk-device,drive=vda"
+	fi
+
 	arch_append="console=ttyAMA0"
 	arch_net_opts="-net nic,model=virtio,macaddr=$mac
 		 -netdev tap,ifname=$tap_nic,script=no,downscript=no,id=tap
