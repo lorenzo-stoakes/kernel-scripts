@@ -63,6 +63,9 @@ kdisable stackprotector_strong
 [[ -n "$ENABLE_GCOV" ]] && \
 	kenable debug_fs gcov_kernel gcov_format_autodetect gcov_profile_all
 
+# Userfaultfd is interesting
+kenable userfaultfd
+
 kenable transparent_hugepage
 
 # Use 16kb pages on arm if set in host system.
