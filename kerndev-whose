@@ -30,7 +30,7 @@ for file in $@; do
 
 	gotoroot
 	echo -e "$file\n"
-	scripts/get_maintainer.pl --subsystem -f $path
+	scripts/get_maintainer.pl --subsystem --git -f $path
 
 	popd > /dev/null
 done
