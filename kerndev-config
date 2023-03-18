@@ -50,6 +50,9 @@ kdisable psi_default_disabled
 # http://rglinuxtech.com/?p=2694 (seems applicable to kernels around ~5.5).
 kdisable stackprotector_strong
 
+# Enable memcg so we can have mm->owner :)
+kenable memcg
+
 # Optionally enable flags for docker support.
 [[ -n "$ENABLE_DOCKER_SUPPORT" ]] && \
     kenable netfilter_advanced dm_thin_provisioning bridge bridge_netfilter \
