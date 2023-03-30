@@ -101,7 +101,7 @@ esac
 
 # '-echr 0x02' moves escape key to C-b to avoid C-a getting nerfed.
 shared_opts="-nographic -s -echr 0x02"
-shared_append="root=/dev/vda rw earlyprintk=ttyS0 loglevel=2 nokaslr"
+shared_append="root=/dev/vda rw earlyprintk=ttyS0 loglevel=2 nokaslr no_hash_pointers"
 
 numa_opts="-smp ${QEMU_CORES} -m ${QEMU_RAM} "
 if [[ -n "$USE_NUMA" ]]; then

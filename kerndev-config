@@ -8,8 +8,8 @@ if [[ -n "$REBUILD" ]] || [[ ! -f .config ]]; then
 	mak defconfig
 fi
 
-# Show extra version info.
-kenable localversion_auto
+# It isn't always useful to have extra version info :)
+kdisable localversion_auto
 
 # Required for systemd.
 kenable fhandle
@@ -69,13 +69,17 @@ kenable memcg
 # Userfaultfd is interesting
 kenable userfaultfd
 
+# We want THP.
 kenable transparent_hugepage
+
+# Generate test_vmalloc module for testing.
+scripts/config --module test_vmalloc
 
 # Use 16kb pages on arm if set in host system.
 zgrep ARM64_16K_PAGES /proc/config.gz &>/dev/null && kenable arm64_16k_pages || true
 
 make olddefconfig
 # We don't need modules.
-make mod2noconfig
+make mod2noconfig || true
 
 pop
