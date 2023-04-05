@@ -66,7 +66,14 @@ useradd -m $username -G wheel >&/dev/null || true
 passwd -d $username >/dev/null
 echo "%wheel ALL=(ALL) ALL" >> /etc/sudoers
 mkdir -p /etc/systemd/system/serial-getty@ttyS0.service.d
+mkdir -p /etc/systemd/system/serial-getty@ttyAMA0.service.d
 # I've found xterm works the best.
+cat >/etc/systemd/system/serial-getty@ttyAMA0.service.d/autologin.conf <<EOF
+[Service]
+ExecStart=
+ExecStart=-/usr/bin/agetty --autologin $username -s %i 115200,38400,9600 xterm
+EOF
+
 cat >/etc/systemd/system/serial-getty@ttyS0.service.d/autologin.conf <<EOF
 [Service]
 ExecStart=
