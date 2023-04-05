@@ -84,6 +84,7 @@ mv /.ssh /home/$username/
 chown -R $username:$username /home/$username/.ssh
 
 echo Configuring zsh...
+
 user_zshrc=/home/$username/.zshrc
 
 # Install oh-my-zsh
