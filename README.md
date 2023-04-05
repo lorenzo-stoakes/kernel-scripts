@@ -82,3 +82,13 @@ __IMPORTANT:__ `gdb` has a big issue with the CPU changing architecture on
 [lahwaacz-scripts]:https://github.com/lahwaacz/archlinux-dotfiles
 [qemu-launcher.sh]:https://github.com/lahwaacz/archlinux-dotfiles/blob/master/Scripts/qemu-launcher.sh
 [xyne]:http://xyne.archlinux.ca/notes/network/dhcp_with_dns.html
+
+## Required packages
+
+```
+brctl
+dnsmasq
+arch-install-scripts
+qemu-system-*
+idemptables
+```
