@@ -93,7 +93,7 @@ sudo -u $username git clone https://aur.archlinux.org/oh-my-zsh-git.git /tmp/ls_
 cd /tmp/ls__omz
 sudo -u $username makepkg -si --noconfirm &>/dev/null
 cp /usr/share/oh-my-zsh/zshrc $user_zshrc
-echo ZSH_THEME=\"gallois\" > $user_zshrc
+sed -i 's/ZSH_THEME=".*"/ZSH_THEME="gallois"/' $user_zshrc
 chsh -s /usr/bin/zsh $username >/dev/null
 
 # For some reason qemu is sending carriage returns... :( fix!!
