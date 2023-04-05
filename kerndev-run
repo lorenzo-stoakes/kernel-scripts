@@ -49,22 +49,25 @@ arm)
 	;&
 aarch64)
 	kernel_image_path=$LINUX_DEV_PATH/arch/arm64/boot/Image
+
 	rootfs_image_path=${rootfs_image_path:-$KERNDEV_PATH/rootfs_aarch64.img}
 
-	if [[ "${target_arch}" != "$(uname -m)" ]]; then
-		echo $target_arch
-		arch_opts="-machine virt
-			 -cpu cortex-a57
-			 -machine type=virt,kernel_irqchip=on
-			 -drive if=none,file=$rootfs_image_path,id=vda,format=raw
-			 -device virtio-blk-device,drive=vda"
-	else
+	if [[ "${target_arch}" == "$(uname -m)" ]]; then
+		rootfs_image_path=$KERNDEV_PATH/rootfs.img
+
 		arch_opts="
 			-machine virt
 			-enable-kvm
 			-cpu host
 			-drive if=none,file=$rootfs_image_path,id=vda,format=raw
 			-device virtio-blk-device,drive=vda"
+	else
+		echo $target_arch
+		arch_opts="-machine virt
+			 -cpu cortex-a57
+			 -machine type=virt,kernel_irqchip=on
+			 -drive if=none,file=$rootfs_image_path,id=vda,format=raw
+			 -device virtio-blk-device,drive=vda"
 	fi
 
 	arch_append="console=ttyAMA0"
