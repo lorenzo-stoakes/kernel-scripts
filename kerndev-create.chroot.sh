@@ -90,12 +90,11 @@ user_zshrc=/home/$username/.zshrc
 rm -rf /tmp/ls__omz
 sudo -u $username git clone https://aur.archlinux.org/oh-my-zsh-git.git /tmp/ls__omz &>/dev/null
 cd /tmp/ls__omz
-sudo -u $username makepkg -s &>/dev/null
-pacman --noconfirm -U *.zst
-
-chsh -s /usr/bin/zsh $username >/dev/null
+sudo -u $username makepkg -si --noconfirm &>/dev/null
+cp /usr/share/oh-my-zsh/zshrc $user_zshrc
 echo ZSH_THEME=\"gallois\" > $user_zshrc
-cat /usr/share/oh-my-zsh/zshrc | grep -v ZSH_THEME >> $user_zshrc
+chsh -s /usr/bin/zsh $username >/dev/null
+
 # For some reason qemu is sending carriage returns... :( fix!!
 cat >>$user_zshrc <<EOF
 stty icrnl
