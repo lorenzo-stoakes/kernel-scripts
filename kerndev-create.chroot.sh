@@ -35,17 +35,12 @@ fi
 
 echo Configuring system...
 # We want to use the network :)
-pacman -S --noconfirm dhcpcd
+pacman -S --noconfirm dhcpcd &>/dev/null
 systemctl -q enable dhcpcd
 # Retrieve wget so we can set it as the transfer command in a moment.
 pacman -S --noconfirm wget &>/dev/null
 # We assign Google DNS servers (outside this script), so fuck this hook.
 echo "nohook resolv.conf" >> /etc/dhcpcd.conf
-# Configure pacman to use wget for perf.
-cat >>/etc/pacman.conf <<EOF
-[options]
-XferCommand = /usr/bin/wget -c -q --show-progress --passive-ftp -O %o %u
-EOF
 # No delay for incorrect password reattempt. Pet peeve!
 sed -i 's/try_first_pass/try_first_pass nodelay/' /etc/pam.d/system-auth
 echo tux > /etc/hostname
