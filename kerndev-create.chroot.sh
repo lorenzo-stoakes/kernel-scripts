@@ -72,10 +72,7 @@ cat >/etc/systemd/system/serial-getty@ttyS0.service.d/autologin.conf <<EOF
 ExecStart=
 ExecStart=-/usr/bin/agetty --autologin $username -s %i 115200,38400,9600 xterm
 EOF
-# Screen: C-a is what qemu uses, so use C-b instead.
-cat >>/home/$username/.screenrc <<EOF
-escape ^Bb
-EOF
+
 # Create script to 'leave' dev env to prevent accidentally running `sudo
 # poweroff` in the host by mistake (I've done this... more than once :)
 cat >/usr/bin/leave <<EOF
