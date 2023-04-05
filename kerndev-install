@@ -2,7 +2,8 @@
 set -e; set -o pipefail; source kerndev-shared.sh
 
 # If argument provided it specifies a cross-compile target architecture.
-target_arch=${1:-"x86_64"}
+target_arch=${1:-$(uname -m)}
+rootfs=rootfs.img
 
 case $target_arch in
 arm)
@@ -13,7 +14,6 @@ aarch64)
 	cross_compile_prefix="aarch64-linux-gnu-"
 	;;
 x86_64)
-	rootfs=rootfs.img
 	kernel_image_path=$LINUX_DEV_PATH/arch/x86/boot/bzImage
 
 	check_linux_dev_path
@@ -25,7 +25,7 @@ x86_64)
 	;;
 esac
 
-if [[ "$target_arch" != "x86_64" ]]; then
+if [[ "$target_arch" != "$(uname -m)" ]]; then
 	rootfs=rootfs_${target_arch}.img
 	make_opts="ARCH=${linux_arch} CROSS_COMPILE=$cross_compile_prefix"
 fi
