@@ -29,7 +29,7 @@ function determine_wan_nic()
 	ip route ls | grep default | grep -Po '(?<=(dev ))[^ ]+' || true
 }
 
-check_exists brctl dnsmasq idemptables
+check_exists brctl dnsmasq
 
 tap_nic=$(get_tap_name)
 

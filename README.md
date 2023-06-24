@@ -86,9 +86,8 @@ __IMPORTANT:__ `gdb` has a big issue with the CPU changing architecture on
 ## Required packages
 
 ```
-brctl
+bridge-utils
 dnsmasq
 arch-install-scripts
 qemu-system-*
-idemptables
 ```

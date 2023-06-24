@@ -4,6 +4,9 @@ set -e; set -o pipefail
 # Original author: Xyne
 # http://xyne.archlinux.ca/notes/network/dhcp_with_dns.html
 
+# Via https://stackoverflow.com/a/246128
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
 function print_usage() {
 	echo "usage: $0 <WAN interface> <subnet interface> <up|down>"
 }
@@ -25,7 +28,7 @@ fi
 mask=/24
 subnet_ip=192.168.137.0$mask
 server_ip=192.168.137.23$mask
-iptables=/usr/bin/idemptables
+iptables=$SCRIPT_DIR/idemptables
 dnsmasq_pid=/run/dnsmasq.pid
 dnsmasq_lease=/run/dnsmasq.lease
 dnsmasq_port=0
