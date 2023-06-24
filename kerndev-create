@@ -67,7 +67,7 @@ echo Running chroot-ed rootfs image config script...
 cp $chroot_script_path /mnt/chroot.sh
 # Copy ssh keys + config.
 cp -R /home/$SUDO_USER/.ssh /mnt/
-arch-chroot /mnt /chroot.sh $SUDO_USER $ROOT_PASSWORD
+arch-chroot /mnt /chroot.sh $SUDO_USER $(id -u $SUDO_USER) $ROOT_PASSWORD
 rm /mnt/chroot.sh
 # arch-chroot mounts the system's /etc/resolv.conf, so do this outside the
 # chroot.
@@ -116,13 +116,15 @@ fi
 unmount
 trap - EXIT
 
-echo Building linux...
-# Install separately so we can update user on progress separately, also this
-# means we can run as the user and thus not write root owned files!
-NO_DONE=y DONT_INSTALL=y sudo -E -u $SUDO_USER kerndev-build
+if [[ -n "$KERNEL_BUILD_ON_CREATE" ]]; then
+	echo Building linux...
+	# Install separately so we can update user on progress separately, also this
+	# means we can run as the user and thus not write root owned files!
+	NO_DONE=y DONT_INSTALL=y sudo -E -u $SUDO_USER kerndev-build
 
-echo Installing modules into image...
-NO_DONE=y kerndev-install
+	echo Installing modules into image...
+	NO_DONE=y kerndev-install
+fi
 
 pop
 

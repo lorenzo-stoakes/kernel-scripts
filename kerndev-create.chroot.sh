@@ -8,7 +8,8 @@ CONSOLE_COLS=${CONSOLE_COLS:-80}
 
 # Passed by calling script.
 username=$1 # == $SUDO_USER
-password=$2 # Optional, if not provided script will prompt.
+uid=$2      # The user ID associated with $username so we can sync bindmount.
+password=$3 # Optional, if not provided script will prompt.
 
 # Functions.
 
@@ -44,6 +45,8 @@ echo "nohook resolv.conf" >> /etc/dhcpcd.conf
 # No delay for incorrect password reattempt. Pet peeve!
 sed -i 's/try_first_pass/try_first_pass nodelay/' /etc/pam.d/system-auth
 echo tux > /etc/hostname
+# Set up directory for kernel source bindmount.
+mkdir -p /src/kernel
 
 # Now get the packages we want.
 echo Installing packages...
@@ -62,7 +65,7 @@ else
 fi
 
 echo Setting up user $username with auto-login...
-useradd -m $username -G wheel >&/dev/null || true
+useradd -m $username -u $uid -G wheel >&/dev/null || true
 passwd -d $username >/dev/null
 echo "%wheel ALL=(ALL) ALL" >> /etc/sudoers
 mkdir -p /etc/systemd/system/serial-getty@ttyS0.service.d
@@ -89,6 +92,8 @@ EOF
 chmod +x /usr/bin/leave
 mv /.ssh /home/$username/
 chown -R $username:$username /home/$username/.ssh
+chown -R $username:$username /src
+echo "kernel /src/kernel 9p trans=virtio,version=9p2000.L 0 0" >> /etc/fstab
 
 echo Configuring zsh...
 
@@ -107,6 +112,11 @@ chsh -s /usr/bin/zsh $username >/dev/null
 cat >>$user_zshrc <<EOF
 stty icrnl
 stty rows $CONSOLE_ROWS cols $CONSOLE_COLS
+
+# The bindmounted kernel source chokes on fancy git plugin. Stub it out.
+git_custom_status() {
+}
+
 EOF
 chown $username:$username $user_zshrc
 

@@ -104,6 +104,8 @@ esac
 
 # '-echr 0x02' moves escape key to C-b to avoid C-a getting nerfed.
 shared_opts="-nographic -s -echr 0x02"
+# We expose the kernel source as a 9p bindmount to /src/kernel in the guest.
+shared_opts+=" -virtfs local,path=$LINUX_DEV_PATH,mount_tag=kernel,security_model=mapped,id=kernel"
 # Can add the latter in case heavier log output is required -> console.
 shared_append="root=/dev/vda rw earlyprintk=ttyS0 nokaslr no_hash_pointers loglevel=2" #loglevel=7 systemd.journald.forward_to_console=1"
 
