@@ -11,6 +11,10 @@ The scripts have been expanded to include some rudimentary support for the
 aarch64 architecture. To use this functionality, run `kerndev-create aarch64`
 (or `kerndev-create-aarch64`) and `kerndev-run aarch64`.
 
+**WARNING:** This does things as sudo, messes with dnsmasq settings and I
+generally take no responsibility if this nukes your system. I've never had
+issues arising from it but caveat emptor.
+
 ## Acknowledgements
 
 The qemu networking code is based on [Jakub Klinkovský][lahwaacz]'s
