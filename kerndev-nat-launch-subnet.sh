@@ -193,7 +193,7 @@ function launch_subnet()
 			then
 				"$pre_down"
 			fi
-			ip addr delete "$server_ip" dev "$subnet_nic"
+			ip addr delete "$server_ip" dev "$subnet_nic" &> /dev/null || true
 			ip link set dev "$subnet_nic" down
 			if [[ -n $post_down ]]
 			then
