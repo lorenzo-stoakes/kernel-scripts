@@ -53,6 +53,8 @@ kdisable stackprotector_strong
 # Enable memcg so we can have mm->owner :)
 kenable memcg
 
+kenable checkpoint_restore mem_soft_dirty mapping_dirty_helpers
+
 # Optionally enable flags for docker support.
 [[ -n "$ENABLE_DOCKER_SUPPORT" ]] && \
     kenable netfilter_advanced dm_thin_provisioning bridge bridge_netfilter \
