@@ -86,6 +86,9 @@ x86_64|icelake)
 		-drive file=$rootfs_image_path,if=virtio,cache=none,format=raw
 		-boot once=c"
 	else
+		# Throttle I/O
+		# ,throttling.iops-total=1000,throttling.iops-size=4096
+
 		arch_opts="-enable-kvm
 		-cpu host
 		-drive file=$rootfs_image_path,if=virtio,cache=none,format=raw
