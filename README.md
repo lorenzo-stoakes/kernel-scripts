@@ -1,5 +1,9 @@
 # Kernel Development Scripts
 
+**IMPORTANT:** I recently discovered https://github.com/arighi/virtme-ng which
+provides a lot more functionality than these scripts do, I recommend using this
+over the scripts.
+
 These are my kernel development scripts. Some are specific to my setup, others
 are more generic. I'm working on making them more generic over time.
 
@@ -14,6 +18,7 @@ aarch64 architecture. To use this functionality, run `kerndev-create aarch64`
 **WARNING:** This does things as sudo, messes with dnsmasq settings and I
 generally take no responsibility if this nukes your system. I've never had
 issues arising from it but caveat emptor.
+
 
 ## Acknowledgements
 
