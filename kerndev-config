@@ -74,6 +74,9 @@ kenable userfaultfd
 # We want THP.
 kenable transparent_hugepage
 
+# Memory failure useful.
+kenable memory_failure
+
 # Generate test_vmalloc module for testing.
 scripts/config --module test_vmalloc
 
