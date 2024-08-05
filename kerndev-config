@@ -32,6 +32,9 @@ kdisable hw_random_virtio virtio_balloon drm_virtio_gpu crypto_dev_virtio
 kenable debug_info debug_info_dwarf5 gdb_scripts frame_pointer
 kdisable debug_info_reduced debug_rodata debug_info_compressed debug_info_split
 
+# Enable VM debug settings.
+kenable debug_vm debug_vm_pgtable
+
 # Remove irritating debug messages we don't care about.
 kdisable debug_stack_usage audit
 
