@@ -6,10 +6,10 @@ set -e; set -o pipefail
 # appropriate.
 
 debian_mirror_default=http://mirror.positive-internet.com/debian
-debian_packages_default="netbase,ifupdown,net-tools,dhcpcd5,iproute,wget,sudo,\
+debian_packages_default="netbase,ifupdown,net-tools,dhcpcd5,iproute2,wget,sudo,\
 zsh,curl,ca-certificates,man-db,git,pciutils,usbutils,iputils-ping,less,nano,\
-kmod"
-debian_version_default=jessie
+kmod,systemd"
+debian_version_default=bookworm
 image_size_default=30G
 kerndev_path_default=$HOME/kerndev/qemu-images
 
