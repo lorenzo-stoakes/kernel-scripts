@@ -124,12 +124,12 @@ if [[ -n "$USE_NUMA" ]]; then
 fi
 
 wan_nic=$(determine_wan_nic)
-if [[ -n "$wan_nic" ]]; then
-	kerndev-qemu-tap-helper.sh $SUDO_USER $tap_nic $br_nic $wan_nic up
-	trap "kerndev-qemu-tap-helper.sh $SUDO_USER $tap_nic $br_nic $wan_nic down" EXIT
-else
+if [[ -z "$wan_nic" ]] || ! (zgrep -q CONFIG_BRIDGE= /proc/config.gz 2>/dev/null); then
 	echo "WARN: Couldn't determine NIC, networking will not work." >&2
 	unset arch_net_opts
+else
+	kerndev-qemu-tap-helper.sh $SUDO_USER $tap_nic $br_nic $wan_nic up
+	trap "kerndev-qemu-tap-helper.sh $SUDO_USER $tap_nic $br_nic $wan_nic down" EXIT
 fi
 
 $qemu $shared_opts $numa_opts $arch_opts $arch_net_opts $QEMU_CUSTOM_SETTINGS \
