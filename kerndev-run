@@ -132,5 +132,10 @@ else
 	trap "kerndev-qemu-tap-helper.sh $SUDO_USER $tap_nic $br_nic $wan_nic down" EXIT
 fi
 
+# Possible USB flags:
+#      -usb                                                        \
+#      -device usb-ehci,id=ehci                                    \
+#      -device usb-mouse,bus=usb-bus.0                             \
+
 $qemu $shared_opts $numa_opts $arch_opts $arch_net_opts $QEMU_CUSTOM_SETTINGS \
 	-kernel $kernel_image_path -append "$shared_append $arch_append"
