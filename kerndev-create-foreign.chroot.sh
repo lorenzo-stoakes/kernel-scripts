@@ -4,7 +4,7 @@ set -e; set -o pipefail
 # Configurable variables.
 # Console dimensions, adjust to taste, this works well on my screen!
 CONSOLE_ROWS=${CONSOLE_ROWS:-50}
-CONSOLE_COLS=${CONSOLE_COLS:-80}
+CONSOLE_COLS=${CONSOLE_COLS:-200}
 
 # Passed by calling script.
 username=$1 # == $SUDO_USER
