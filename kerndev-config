@@ -90,4 +90,7 @@ make olddefconfig
 # We don't need modules.
 make mod2noconfig || true
 
+# ftrace stuff.
+kenable ftrace_syscalls dynamic_ftrace
+
 pop
