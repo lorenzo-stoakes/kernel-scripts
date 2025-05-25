@@ -89,6 +89,9 @@ zgrep ARM64_16K_PAGES /proc/config.gz &>/dev/null && kenable arm64_16k_pages || 
 # ftrace stuff.
 kenable ftrace_syscalls dynamic_ftrace
 
+# Fault injection stuff.
+keanable fault_injection fault_injection_configfs fault_injection_debug_fs failslab
+
 make olddefconfig
 # We don't need modules.
 make mod2noconfig || true
