@@ -18,7 +18,7 @@ kerndev_path_default=$HOME/kerndev/qemu-images
 if [[ "$PWD" =~ "$HOME/kerndev/kernels/" ]] || is_linux_dir $PWD; then
    linux_dev_path_default=$PWD
 else
-   linux_dev_path_default=$HOME/kerndev/kernels/linux
+   linux_dev_path_default=$HOME/kerndev/kernels/linus
 fi
 
 qemu_cores_default=4
